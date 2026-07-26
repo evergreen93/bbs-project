@@ -1,0 +1,20 @@
+services:
+    backend:
+      image: bbs-backend:latest
+      container_name: bbs-backend
+      ports:
+        - "3000:3000"
+      environment:
+        MYSQLUSER: ${MYSQLUSER}
+        MYSQLPASSWORD: ${MYSQLPASSWORD}
+        JWT_SECRET: ${JWT_SECRET}
+      restart: unless-stopped
+
+    frontend:
+      image: bbs-frontend:latest
+      container_name: bbs-frontend
+      ports:
+        - "8080:80"
+      depends_on:
+        - backend
+      restart: unless-stopped

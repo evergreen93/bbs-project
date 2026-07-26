@@ -1,0 +1,20 @@
+# IntelliJ
+.idea/
+
+# React
+frontend/node_modules/
+frontend/build/
+
+# Backend
+backend/target/
+
+# Git backup
+backend/.git-backup/
+frontend/.git-backup/
+
+# Environment
+.env
+.env.*
+
+# Images
+readme-images/
