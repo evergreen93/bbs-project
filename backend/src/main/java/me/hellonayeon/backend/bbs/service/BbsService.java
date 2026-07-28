@@ -18,6 +18,7 @@ import me.hellonayeon.backend.bbs.dto.response.BbsResponse;
 import me.hellonayeon.backend.bbs.dto.response.CreateBbsResponse;
 import me.hellonayeon.backend.bbs.dto.response.DeleteBbsResponse;
 import me.hellonayeon.backend.bbs.dto.response.UpdateBbsResponse;
+import me.hellonayeon.backend.comment.dao.CommentDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +27,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class BbsService {
 
 	private final BbsDao dao;
+	private final CommentDao commentDao;
 
-	public BbsService(BbsDao dao) {
-		this.dao = dao;
+	public BbsService(
+			BbsDao bbsDao,
+			CommentDao commentDao
+	) {
+		this.dao = bbsDao;
+		this.commentDao = commentDao;
 	}
-
 	/* 게시글 조회 */
 	public BbsListResponse getBbsList(BbsListRequest req) {
 		BbsListParam param = new BbsListParam(req);
@@ -90,6 +95,38 @@ public class BbsService {
 		Integer deletedRecordCount = dao.deleteBbs(seq);
 		return new DeleteBbsResponse(deletedRecordCount);
 	}
+
+	@Transactional(readOnly = true)
+	public int getBoardCount() {
+		Integer count = dao.getBoardCount();
+
+		return count == null ? 0 : count;
+	}
+
+	@Transactional(readOnly = true)
+	public List<Bbs> getAdminBoardList() {
+		return dao.findBoardsForAdmin();
+	}
+
+	@Transactional
+	public void deleteBbsByAdmin(Integer seq) {
+
+		Bbs bbs = dao.getBbs(seq);
+
+		if (bbs == null) {
+			throw new RuntimeException("존재하지 않는 게시글입니다.");
+		}
+
+		// 같은 ref에 속한 원글·답글의 댓글 전체 삭제
+		commentDao.deleteCommentsByBbsRef(seq);
+
+		// 같은 ref에 속한 원글·답글의 조회 기록 전체 삭제
+		dao.deleteReadHistoryByBbsRef(seq);
+
+		// 같은 ref에 속한 원글·답글 전체 삭제
+		dao.deleteBbsGroupByAdmin(seq);
+	}
+
 }
 
 

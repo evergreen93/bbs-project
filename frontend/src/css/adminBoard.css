@@ -1,0 +1,345 @@
+.admin-board-page {
+    min-height: 100vh;
+    padding: 40px;
+    box-sizing: border-box;
+    background: #f5f7fb;
+}
+
+.admin-board-container {
+    width: 100%;
+    max-width: 1380px;
+    margin: 0 auto;
+}
+
+.admin-board-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 28px;
+}
+
+.admin-board-subtitle {
+    margin: 0 0 9px;
+    color: #6574ff;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.admin-board-header h1 {
+    margin: 0;
+    color: #242a3c;
+    font-size: 34px;
+    letter-spacing: -1px;
+}
+
+.admin-board-description {
+    margin: 10px 0 0;
+    color: #8b91a4;
+    font-size: 14px;
+}
+
+.admin-board-summary {
+    display: flex;
+    overflow: hidden;
+    border: 1px solid #e6e9f2;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(44, 54, 92, 0.08);
+}
+
+.admin-board-summary > div {
+    display: flex;
+    min-width: 105px;
+    align-items: baseline;
+    gap: 5px;
+    padding: 19px 21px;
+    border-right: 1px solid #edf0f5;
+}
+
+.admin-board-summary > div:last-child {
+    border-right: none;
+}
+
+.admin-board-summary span {
+    margin-right: auto;
+    color: #8b91a4;
+    font-size: 12px;
+}
+
+.admin-board-summary strong {
+    color: #5968ed;
+    font-size: 25px;
+}
+
+.admin-board-summary small {
+    color: #a2a7b6;
+    font-size: 12px;
+}
+
+.admin-board-message {
+    margin-bottom: 17px;
+    padding: 13px 17px;
+    border: 1px solid #dce2ff;
+    border-radius: 11px;
+    background: #f2f5ff;
+    color: #5362d8;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.admin-board-card {
+    overflow: hidden;
+    border: 1px solid #e6e9f2;
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 16px 45px rgba(40, 49, 84, 0.08);
+}
+
+.admin-board-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 25px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.admin-board-search {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.admin-board-search input {
+    width: 330px;
+    height: 42px;
+    padding: 0 14px;
+    box-sizing: border-box;
+    border: 1px solid #dfe3ed;
+    border-radius: 10px;
+    outline: none;
+    font-size: 14px;
+}
+
+.admin-board-search input:focus {
+    border-color: #6674f7;
+    box-shadow: 0 0 0 3px rgba(102, 116, 247, 0.11);
+}
+
+.admin-board-search-reset,
+.admin-board-refresh {
+    height: 42px;
+    padding: 0 15px;
+    border: 1px solid #dfe3ed;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #687086;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.admin-board-search-reset:hover,
+.admin-board-refresh:hover:not(:disabled) {
+    border-color: #6674f7;
+    background: #f5f6ff;
+    color: #5968ed;
+}
+
+.admin-board-refresh:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.admin-board-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.admin-board-table {
+    width: 100%;
+    min-width: 1000px;
+    border-collapse: collapse;
+}
+
+.admin-board-table th {
+    padding: 15px 18px;
+    border-bottom: 1px solid #e9ecf2;
+    background: #fafbfc;
+    color: #858c9e;
+    font-size: 12px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.admin-board-table td {
+    padding: 17px 18px;
+    border-bottom: 1px solid #eff1f5;
+    color: #4e5569;
+    font-size: 14px;
+}
+
+.admin-board-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.admin-board-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.board-seq-cell {
+    color: #9298a9;
+}
+
+.board-type-original,
+.board-type-answer {
+    display: inline-flex;
+    min-width: 42px;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.board-type-original {
+    background: #eaf0ff;
+    color: #5264e5;
+}
+
+.board-type-answer {
+    background: #f1f2f5;
+    color: #777f93;
+}
+
+.admin-board-title-cell {
+    display: flex;
+    max-width: 430px;
+    align-items: center;
+    gap: 7px;
+}
+
+.answer-arrow {
+    color: #9da3b3;
+    font-weight: 800;
+}
+
+.admin-board-title {
+    overflow: hidden;
+    color: #343b50;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-board-writer {
+    color: #596175;
+    font-weight: 600;
+}
+
+.admin-board-delete-button {
+    min-width: 62px;
+    padding: 8px 13px;
+    border: 1px solid #f0b3b3;
+    border-radius: 9px;
+    background: #fff7f7;
+    color: #dd5d5d;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.admin-board-delete-button:hover:not(:disabled) {
+    border-color: #e96969;
+    background: #e96969;
+    color: #ffffff;
+}
+
+.admin-board-delete-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.admin-board-state {
+    display: flex;
+    min-height: 320px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 35px;
+    text-align: center;
+}
+
+.admin-board-state h3 {
+    margin: 14px 0 7px;
+    color: #343b50;
+}
+
+.admin-board-state p {
+    margin: 0;
+    color: #969cad;
+    font-size: 14px;
+}
+
+.admin-board-empty-icon {
+    display: flex;
+    width: 58px;
+    height: 58px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: #f0f2f7;
+    color: #82899c;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.admin-board-spinner {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 15px;
+    border: 4px solid #e7e9f2;
+    border-top-color: #6574ff;
+    border-radius: 50%;
+    animation: admin-board-spin 0.8s linear infinite;
+}
+
+@keyframes admin-board-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 800px) {
+    .admin-board-page {
+        padding: 25px 15px;
+    }
+
+    .admin-board-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-board-summary {
+        width: 100%;
+    }
+
+    .admin-board-summary > div {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .admin-board-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-board-search {
+        width: 100%;
+    }
+
+    .admin-board-search input {
+        width: 100%;
+    }
+}

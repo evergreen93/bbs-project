@@ -1,0 +1,155 @@
+.admin-member-page{
+    background:#f5f7fb;
+    min-height:100vh;
+    padding:40px;
+}
+
+.admin-member-container{
+    max-width:1300px;
+    margin:auto;
+}
+
+.admin-member-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:30px;
+}
+
+.member-subtitle{
+    color:#6574ff;
+    font-size:12px;
+    font-weight:bold;
+    letter-spacing:2px;
+}
+
+.admin-member-header h1{
+    margin:8px 0;
+    font-size:34px;
+}
+
+.member-count-box{
+    background:white;
+    border-radius:20px;
+    padding:20px 30px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.member-count-box strong{
+    font-size:34px;
+    color:#5968ed;
+}
+
+.member-card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.member-search{
+    margin-bottom:20px;
+}
+
+.member-search input{
+
+    width:300px;
+    height:42px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:0 15px;
+    font-size:14px;
+
+}
+
+.member-table{
+
+    width:100%;
+    border-collapse:collapse;
+
+}
+
+.member-table th{
+
+    background:#f8f9fb;
+    padding:15px;
+    text-align:left;
+
+}
+
+.member-table td{
+
+    padding:15px;
+    border-bottom:1px solid #eee;
+
+}
+
+.member-table tr:hover{
+
+    background:#fafafa;
+
+}
+
+.role-admin{
+
+    background:#ffe5e5;
+    color:#d63031;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+
+}
+
+.role-user{
+
+    background:#e9f2ff;
+    color:#2d6cdf;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+
+}
+
+.empty-row{
+
+    text-align:center;
+    padding:40px;
+
+}
+
+.member-role-btn{
+
+    background:#5968ed;
+    color:white;
+    border:none;
+    border-radius:8px;
+    padding:7px 12px;
+    cursor:pointer;
+    margin-right:8px;
+
+}
+
+.member-role-btn:hover{
+
+    background:#4456e3;
+
+}
+
+.member-delete-btn{
+
+    background:#ef4444;
+    color:white;
+    border:none;
+    border-radius:8px;
+    padding:7px 12px;
+    cursor:pointer;
+
+}
+
+.member-delete-btn:hover{
+
+    background:#dc2626;
+
+}

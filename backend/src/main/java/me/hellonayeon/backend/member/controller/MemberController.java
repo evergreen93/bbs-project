@@ -77,6 +77,8 @@ public class MemberController {
 
 		return new ResponseEntity<>(e.getMessage(), e.getStatus());
 	}
+
+
 }
 
 

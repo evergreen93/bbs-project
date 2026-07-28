@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.hellonayeon.backend.vacation.dao.VacationDao">
+
+    <insert id="createVacation"
+            parameterType="me.hellonayeon.backend.vacation.domain.Vacation">
+
+        INSERT INTO vacation
+        (
+        member_id,
+        vacation_type,
+        start_date,
+        end_date,
+        reason
+        )
+        VALUES
+        (
+        #{memberId},
+        #{vacationType},
+        #{startDate},
+        #{endDate},
+        #{reason}
+        )
+
+    </insert>
+
+
+    <select id="findByMemberId"
+            resultType="me.hellonayeon.backend.vacation.domain.Vacation">
+
+        SELECT *
+        FROM vacation
+        WHERE member_id = #{memberId}
+        ORDER BY start_date DESC
+
+    </select>
+
+    <select id="countTodayVacation"
+            resultType="java.lang.Integer">
+
+        SELECT COUNT(DISTINCT member_id)
+        FROM vacation
+        WHERE status = '승인'
+        AND DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 9 HOUR))
+        BETWEEN start_date AND end_date
+
+    </select>
+
+    <select id="countPendingVacations"
+            resultType="java.lang.Integer">
+
+        SELECT COUNT(*)
+        FROM vacation
+        WHERE status = '대기'
+
+    </select>
+
+    <select id="findPendingVacations"
+            resultType="me.hellonayeon.backend.vacation.domain.Vacation">
+
+        SELECT
+        vacation_id,
+        member_id,
+        vacation_type,
+        start_date,
+        end_date,
+        reason,
+        status
+        FROM vacation
+        WHERE status = '대기'
+        ORDER BY start_date ASC
+        LIMIT 5
+
+    </select>
+
+    <update id="approveVacation"
+            parameterType="java.lang.Integer">
+
+        UPDATE vacation
+        SET status = '승인'
+        WHERE vacation_id = #{vacationId}
+        AND status = '대기'
+
+    </update>
+
+    <update id="rejectVacation"
+            parameterType="java.lang.Integer">
+
+        UPDATE vacation
+        SET status = '반려'
+        WHERE vacation_id = #{vacationId}
+        AND status = '대기'
+
+    </update>
+
+    <select id="findByVacationId"
+            resultType="me.hellonayeon.backend.vacation.domain.Vacation">
+
+        SELECT *
+        FROM vacation
+        WHERE vacation_id=#{vacationId}
+
+    </select>
+
+
+
+</mapper>

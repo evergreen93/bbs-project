@@ -55,6 +55,46 @@
 		WHERE seq = #{seq}
 	</update>
 
+	<select id="getTotalCommentCount"
+	        resultType="java.lang.Integer">
+
+		SELECT COUNT(*)
+		FROM comment
+
+	</select>
+
+	<!-- 관리자 게시글 삭제 시 해당 게시글의 댓글 전체 삭제 -->
+	<delete id="deleteCommentsByBbsSeq"
+	        parameterType="java.lang.Integer">
+
+		DELETE FROM comment
+		WHERE bbs_seq = #{bbsSeq}
+
+	</delete>
+
+	<!-- 관리자 게시글 삭제: 원글과 모든 답글의 댓글 전체 삭제 -->
+	<delete id="deleteCommentsByBbsRef"
+	        parameterType="java.lang.Integer">
+
+		DELETE FROM comment
+		WHERE bbs_seq IN (
+		SELECT target.seq
+		FROM (
+		SELECT seq
+		FROM bbs
+		WHERE ref = (
+		SELECT target_ref.ref
+		FROM (
+		SELECT ref
+		FROM bbs
+		WHERE seq = #{seq}
+		) target_ref
+		)
+		) target
+		)
+
+	</delete>
+
 </mapper>
 
 

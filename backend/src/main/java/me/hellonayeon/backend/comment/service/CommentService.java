@@ -3,6 +3,7 @@ package me.hellonayeon.backend.comment.service;
 import java.util.List;
 import me.hellonayeon.backend.bbs.dto.request.CreateCommentRequest;
 import me.hellonayeon.backend.bbs.dto.response.CreateCommentResponse;
+import me.hellonayeon.backend.bbs.service.BbsService;
 import me.hellonayeon.backend.comment.dao.CommentDao;
 import me.hellonayeon.backend.comment.domain.Comment;
 import me.hellonayeon.backend.comment.dto.param.CommentListParam;
@@ -13,8 +14,13 @@ import me.hellonayeon.backend.comment.dto.request.UpdateCommentRequest;
 import me.hellonayeon.backend.comment.dto.response.CommentResponse;
 import me.hellonayeon.backend.comment.dto.response.DeleteCommentResponse;
 import me.hellonayeon.backend.comment.dto.response.UpdateCommentResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Service
 public class CommentService {
@@ -66,6 +72,15 @@ public class CommentService {
 
         return new UpdateCommentResponse(updatedRecordCount);
     }
+
+    @Transactional(readOnly = true)
+    public int getTotalCommentCount() {
+        Integer count = dao.getTotalCommentCount();
+        return count == null ? 0 : count;
+    }
+
+
+
 
 
 }

@@ -120,6 +120,74 @@
 		WHERE seq=#{seq}
 	</update>
 
+	<select id="getBoardCount"
+	        resultType="java.lang.Integer">
+
+		SELECT COUNT(*)
+		FROM bbs
+		WHERE del = 0
+
+	</select>
+
+	<!-- 관리자 게시글 삭제: 원글과 모든 답글의 조회 기록 삭제 -->
+	<delete id="deleteReadHistoryByBbsRef"
+	        parameterType="java.lang.Integer">
+
+		DELETE FROM read_history
+		WHERE bbs_seq IN (
+		SELECT target.seq
+		FROM (
+		SELECT seq
+		FROM bbs
+		WHERE ref = (
+		SELECT target_ref.ref
+		FROM (
+		SELECT ref
+		FROM bbs
+		WHERE seq = #{seq}
+		) target_ref
+		)
+		) target
+		)
+
+	</delete>
+
+
+	<!-- 관리자 게시글 삭제: 같은 ref의 원글과 모든 답글 실제 삭제 -->
+	<delete id="deleteBbsGroupByAdmin"
+	        parameterType="java.lang.Integer">
+
+		DELETE FROM bbs
+		WHERE ref = (
+		SELECT target.ref
+		FROM (
+		SELECT ref
+		FROM bbs
+		WHERE seq = #{seq}
+		) target
+		)
+
+	</delete>
+
+	<select id="findBoardsForAdmin"
+	        resultType="me.hellonayeon.backend.bbs.domain.Bbs">
+
+		SELECT
+		seq,
+		id,
+		ref,
+		step,
+		depth,
+		title,
+		content,
+		created_at AS createdAt,
+		del,
+		read_count AS readCount
+		FROM bbs
+		ORDER BY ref DESC, step ASC
+
+	</select>
+
 </mapper>
 
 

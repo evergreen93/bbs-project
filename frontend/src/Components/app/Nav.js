@@ -1,66 +1,168 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Nav() {
+	const { auth } = useContext(AuthContext);
+	const navigate = useNavigate();
 
-	const { auth, setAuth } = useContext(AuthContext);
+	const role = localStorage.getItem("role");
+	const isAdmin = role === "ADMIN" || role === "ROLE_ADMIN";
+
+	const moveProtectedPage = (path) => {
+		if (!auth) {
+			alert("로그인 후 사용할 수 있습니다.");
+			navigate("/login");
+			return;
+		}
+
+		navigate(path);
+	};
 
 	return (
 		<nav className="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
 			<div className="container">
 
-				<div className="navbar-collapse collapse justify-content-between" id="navbar-content">
+				<Link className="navbar-brand font-weight-bold" to="/">
+					<i className="fas fa-building"></i> OfficeFlow
+				</Link>
+
+				<button
+					className="navbar-toggler"
+					type="button"
+					data-toggle="collapse"
+					data-target="#navbar-content"
+					aria-controls="navbar-content"
+					aria-expanded="false"
+					aria-label="메뉴 열기"
+				>
+					<span className="navbar-toggler-icon"></span>
+				</button>
+
+				<div
+					className="navbar-collapse collapse justify-content-between"
+					id="navbar-content"
+				>
 					<ul className="navbar-nav mr-auto">
 
-						{/* 메인 화면 */}
 						<li className="nav-item">
-							<Link className="nav-link" to="/"><i className="fas fa-home"></i> Home</Link>
+							<Link className="nav-link" to="/">
+								<i className="fas fa-home"></i> 홈
+							</Link>
 						</li>
 
-						{/* 게시판 */}
-						<li className="nav-item dropdown">
-
-							<div className="nav-link dropdown-toggle" id="navbarDropdown"
-								role="button" data-toggle="dropdown" aria-haspopup="true"
-								aria-expanded="false">게시판</div>
-
-							<div className="dropdown-menu" aria-labelledby="navbarDropdown">
-								<Link className="dropdown-item" to="/bbslist">글목록</Link>
-								<Link className="dropdown-item" to="/bbswrite">글추가</Link>
-							</div>
+						<li className="nav-item">
+							<button
+								type="button"
+								className="nav-link btn btn-link"
+								onClick={() =>
+									moveProtectedPage("/dashboard")
+								}
+								style={{
+									border: "none",
+									background: "none"
+								}}
+							>
+								<i className="fas fa-chart-line"></i>{" "}
+								대시보드
+							</button>
 						</li>
+
+						<li className="nav-item">
+							<Link className="nav-link" to="/bbslist">
+								<i className="fas fa-clipboard-list"></i>{" "}
+								게시판
+							</Link>
+						</li>
+
+						<li className="nav-item">
+							<button
+								type="button"
+								className="nav-link btn btn-link"
+								onClick={() =>
+									moveProtectedPage("/attendance")
+								}
+								style={{
+									border: "none",
+									background: "none"
+								}}
+							>
+								<i className="fas fa-clock"></i>{" "}
+								근태관리
+							</button>
+						</li>
+
+						<li className="nav-item">
+							<button
+								type="button"
+								className="nav-link btn btn-link"
+								onClick={() =>
+									moveProtectedPage("/vacation")
+								}
+								style={{
+									border: "none",
+									background: "none"
+								}}
+							>
+								<i className="fas fa-calendar-check"></i>{" "}
+								휴가관리
+							</button>
+						</li>
+
+						{auth && isAdmin && (
+							<li className="nav-item">
+								<Link className="nav-link" to="/admin">
+									<i className="fas fa-user-shield"></i>{" "}
+									관리자
+								</Link>
+							</li>
+						)}
+
 					</ul>
+
 					<ul className="navbar-nav ml-auto">
+						{auth ? (
+							<>
+								<li className="nav-item">
+									<span className="nav-link">
+										<i className="fas fa-user"></i>{" "}
+										{auth} 님
+									</span>
+								</li>
 
-						{							
-							(auth) ?
-								<>
-									{/* 회원 정보 */}
-									<li className="nav-item">
-										<span className="nav-link"> {auth} 님 반갑습니다 <i className="fab fa-ello"></i> &nbsp; </span>
-									</li>
+								<li className="nav-item">
+									<Link
+										className="nav-link"
+										to="/logout"
+									>
+										<i className="fas fa-sign-out-alt"></i>{" "}
+										로그아웃
+									</Link>
+								</li>
+							</>
+						) : (
+							<>
+								<li className="nav-item">
+									<Link
+										className="nav-link"
+										to="/login"
+									>
+										<i className="fas fa-sign-in-alt"></i>{" "}
+										로그인
+									</Link>
+								</li>
 
-									{/* 로그아웃 */}
-									<li className="nav-item">
-										<Link className="nav-link" to="/logout"><i className="fas fa-sign-out-alt"></i> 로그아웃</Link>
-									</li>
-
-								</>
-								:
-								<>
-									{/* 로그인 */}
-									<li className="nav-item">
-										<Link className="nav-link" to="/login">로그인</Link>
-									</li>
-
-									{/* 회원가입 */}
-									<li className="nav-item">
-										<Link className="nav-link" to="/join">회원가입</Link>
-									</li>
-								</>
-						}
-
+								<li className="nav-item">
+									<Link
+										className="nav-link"
+										to="/join"
+									>
+										<i className="fas fa-user-plus"></i>{" "}
+										회원가입
+									</Link>
+								</li>
+							</>
+						)}
 					</ul>
 				</div>
 			</div>

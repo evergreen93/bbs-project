@@ -19,14 +19,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     // username = User (id)
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+
         System.out.println("UserDetailsServiceImpl loadUserByUsername " + new Date());
 
         Member member = memberDao.findById(username);
+
         if (member == null) {
-            throw new UsernameNotFoundException(String.format("'%s'는 존재하지 않는 사용자입니다.", username));
+            throw new UsernameNotFoundException(
+                    String.format("'%s'는 존재하지 않는 사용자입니다.", username)
+            );
+        }
+
+        if ("N".equals(member.getEnabled())) {
+            throw new UsernameNotFoundException("탈퇴한 회원입니다.");
         }
 
         return new UserDetailsImpl(member);
     }
+
+
+
 }

@@ -1,15 +1,13 @@
 import Router from "../router/Router"
 
 function Main() {
-	return (
-		<main>
-          <div className="py-4">
+    return (
+        <main>
             <div className="container">
-              <Router></Router>
+                <Router />
             </div>
-          </div>
         </main>
-	);
+    );
 }
 
 export default Main;

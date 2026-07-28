@@ -1,6 +1,4 @@
-* {
-	white-space: pre-wrap;
-}
+
 
 textarea {
     background-color: transparent;
@@ -77,4 +75,16 @@ span.bbs-title {
     background-color: #212529 !important;
 	color: #ffffff;
     border: solid 1px #ffffff;
+}
+
+noscript {
+	display: none !important;
+}
+
+html,
+body,
+#root {
+	margin: 0;
+	padding: 0;
+	white-space: normal;
 }

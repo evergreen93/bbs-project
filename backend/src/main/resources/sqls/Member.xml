@@ -5,13 +5,22 @@
   
 <mapper namespace="me.hellonayeon.backend.member.dao.MemberDao">
 
-<select id="findById" parameterType="String" resultType="me.hellonayeon.backend.member.domain.Member">
+	<select id="findById"
+	        parameterType="String"
+	        resultType="me.hellonayeon.backend.member.domain.Member">
 
-SELECT id, name, pwd, email
-	FROM member
-	WHERE id=#{id}
+		SELECT
+		id,
+		name,
+		pwd,
+		email,
+		role,
+		enabled
+		FROM member
+		WHERE id = #{id}
+		AND enabled = 'Y'
 
-</select>
+	</select>
 
 <select id="isExistUserId" parameterType="String" resultType="java.lang.Integer">
 	SELECT count(*)
@@ -19,10 +28,52 @@ SELECT id, name, pwd, email
 	WHERE id=#{id}
 </select>
 
-<insert id="createMember" parameterType="me.hellonayeon.backend.member.dto.param.CreateMemberParam">
-	INSERT INTO member(id, pwd, name, email)
-	VALUES(#{id}, #{pwd}, #{name}, #{email})
-</insert>
+	<insert id="createMember"
+	        parameterType="me.hellonayeon.backend.member.dto.param.CreateMemberParam">
+
+		INSERT INTO member(id, pwd, name, email)
+		VALUES(#{id}, #{pwd}, #{name}, #{email})
+
+	</insert>
+
+	<select id="countMembers" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM member
+	</select>
+
+	<select id="findMembers"
+	        resultType="me.hellonayeon.backend.member.domain.Member">
+
+		SELECT
+		id,
+		name,
+		email,
+		role,
+		enabled
+		FROM member
+		WHERE enabled = 'Y'
+		ORDER BY id ASC
+
+	</select>
+
+	<update id="changeRole">
+
+		UPDATE member
+		SET role = #{role}
+		WHERE id = #{id}
+
+	</update>
+
+	<update id="deleteMember">
+
+		UPDATE member
+		SET enabled = 'N'
+		WHERE id = #{id}
+
+	</update>
+
+
+
 
 <!--<select id="login" parameterType="me.hellonayeon.backend.member.domain.Member"-->
 <!--	resultType="me.hellonayeon.backend.member.domain.Member">-->

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.hellonayeon.backend.attendance.dao.AttendanceDao">
+
+    <resultMap
+            id="attendanceMap"
+            type="me.hellonayeon.backend.attendance.domain.Attendance">
+
+        <id
+                column="attendance_id"
+                property="attendanceId"/>
+
+        <result
+                column="member_id"
+                property="memberId"/>
+
+        <result
+                column="work_date"
+                property="workDate"/>
+
+        <result
+                column="start_time"
+                property="startTime"/>
+
+        <result
+                column="end_time"
+                property="endTime"/>
+
+        <result
+                column="status"
+                property="status"/>
+
+        <result
+                column="created_at"
+                property="createdAt"/>
+
+        <result
+                property="workingCount"
+                column="working_count"
+        />
+
+        <result
+                property="finishedCount"
+                column="finished_count"
+        />
+
+        <result
+                property="absentCount"
+                column="absent_count"
+        />
+
+        <result
+                property="vacationCount"
+                column="vacation_count"
+        />
+
+    </resultMap>
+
+
+    <select
+            id="findTodayByMemberId"
+            parameterType="String"
+            resultMap="attendanceMap">
+
+        SELECT
+        attendance_id,
+        member_id,
+        work_date,
+        start_time,
+        end_time,
+        status,
+        created_at
+        FROM attendance
+        WHERE member_id = #{memberId}
+        AND work_date = DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 9 HOUR))
+
+    </select>
+
+
+    <insert
+            id="startAttendance"
+            parameterType="String">
+
+        INSERT INTO attendance (
+        member_id,
+        work_date,
+        start_time,
+        end_time,
+        status
+        )
+        VALUES (
+        #{memberId},
+        DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 9 HOUR)),
+        DATE_ADD(UTC_TIMESTAMP(), INTERVAL 9 HOUR),
+        NULL,
+        '근무중'
+        )
+
+    </insert>
+
+
+    <update
+            id="endAttendance"
+            parameterType="String">
+
+        UPDATE attendance
+        SET end_time = DATE_ADD(UTC_TIMESTAMP(), INTERVAL 9 HOUR),
+        status = '퇴근'
+        WHERE member_id = #{memberId}
+        AND work_date = DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 9 HOUR))
+        AND end_time IS NULL
+
+    </update>
+
+
+    <select
+            id="findHistoryByMemberId"
+            parameterType="String"
+            resultMap="attendanceMap">
+
+        SELECT
+        attendance_id,
+        member_id,
+        work_date,
+        start_time,
+        end_time,
+        status,
+        created_at
+        FROM attendance
+        WHERE member_id = #{memberId}
+        ORDER BY work_date DESC
+        LIMIT 30
+
+    </select>
+
+    <select id="getTodayAttendanceSummary"
+            resultType="me.hellonayeon.backend.attendance.dto.AttendanceSummary">
+
+        SELECT
+        COALESCE(
+        SUM(
+        CASE
+        WHEN vacation_member.member_id IS NULL
+        AND today_attendance.start_time IS NOT NULL
+        AND today_attendance.end_time IS NULL
+        THEN 1
+        ELSE 0
+        END
+        ),
+        0
+        ) AS working_count,
+
+        COALESCE(
+        SUM(
+        CASE
+        WHEN vacation_member.member_id IS NULL
+        AND today_attendance.end_time IS NOT NULL
+        THEN 1
+        ELSE 0
+        END
+        ),
+        0
+        ) AS finished_count,
+
+        COALESCE(
+        SUM(
+        CASE
+        WHEN vacation_member.member_id IS NULL
+        AND today_attendance.member_id IS NULL
+        THEN 1
+        ELSE 0
+        END
+        ),
+        0
+        ) AS absent_count,
+
+        COALESCE(
+        SUM(
+        CASE
+        WHEN vacation_member.member_id IS NOT NULL
+        THEN 1
+        ELSE 0
+        END
+        ),
+        0
+        ) AS vacation_count
+
+        FROM member m
+
+        LEFT JOIN (
+        SELECT
+        member_id,
+        MAX(start_time) AS start_time,
+        MAX(end_time) AS end_time
+        FROM attendance
+        WHERE work_date = DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 9 HOUR))
+        GROUP BY member_id
+        ) today_attendance
+        ON today_attendance.member_id = m.id
+
+        LEFT JOIN (
+        SELECT DISTINCT member_id
+        FROM vacation
+        WHERE status = '승인'
+        AND DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 9 HOUR))
+        BETWEEN start_date AND end_date
+        ) vacation_member
+        ON vacation_member.member_id = m.id
+
+    </select>
+
+</mapper>

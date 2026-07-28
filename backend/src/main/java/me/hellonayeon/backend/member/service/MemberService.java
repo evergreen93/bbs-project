@@ -18,6 +18,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import me.hellonayeon.backend.member.domain.Member;
+
 
 @Service
 @Transactional
@@ -26,19 +29,21 @@ public class MemberService {
 	private final MemberDao dao;
 	private final PasswordEncoder encoder;
 	private final AuthenticationManager authenticationManager;
+	private final MemberDao memberDao;
 
 	private final JwtTokenUtil jwtTokenUtil;
 	private final UserDetailsService userDetailsService;
 
 
 	public MemberService(MemberDao dao, PasswordEncoder encoder,
-		AuthenticationManager authenticationManager,
-		JwtTokenUtil jwtTokenUtil,
-		UserDetailsService userDetailsService) {
+                         AuthenticationManager authenticationManager, MemberDao memberDao,
+                         JwtTokenUtil jwtTokenUtil,
+                         UserDetailsService userDetailsService) {
 		this.dao = dao;
 		this.encoder = encoder;
 		this.authenticationManager = authenticationManager;
-		this.jwtTokenUtil = jwtTokenUtil;
+        this.memberDao = memberDao;
+        this.jwtTokenUtil = jwtTokenUtil;
 		this.userDetailsService = userDetailsService;
 	}
 
@@ -76,10 +81,19 @@ public class MemberService {
 	public LoginResponse login(LoginRequest req) {
 		authenticate(req.getId(), req.getPwd());
 
-		final UserDetails userDetails = userDetailsService.loadUserByUsername(req.getId());
-		final String token = jwtTokenUtil.generateToken(userDetails);
+		final UserDetails userDetails =
+				userDetailsService.loadUserByUsername(req.getId());
 
-		return new LoginResponse(token, req.getId());
+		final String token =
+				jwtTokenUtil.generateToken(userDetails);
+
+		Member member = dao.findById(req.getId());
+
+		return new LoginResponse(
+				token,
+				member.getId(),
+				member.getRole()
+		);
 	}
 
 	private void authenticate(String id, String pwd) {
@@ -104,6 +118,41 @@ public class MemberService {
 			throw new MemberException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	@Transactional(readOnly = true)
+	public int getMemberCount() {
+		Integer count = dao.countMembers();
+
+		return count == null ? 0 : count;
+	}
+
+	@Transactional(readOnly = true)
+	public List<Member> getMemberList() {
+		return dao.findMembers();
+	}
+
+	public void changeRole(String id) {
+
+		Member member = dao.findById(id);
+
+		if (member == null) {
+			throw new RuntimeException("회원이 존재하지 않습니다.");
+		}
+
+		String role =
+				"ADMIN".equals(member.getRole())
+						? "USER"
+						: "ADMIN";
+
+		dao.changeRole(id, role);
+	}
+
+	public void deleteMember(String id) {
+
+		dao.deleteMember(id);
+
+	}
+	
 }
 
 

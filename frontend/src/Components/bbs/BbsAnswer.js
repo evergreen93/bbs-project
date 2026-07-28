@@ -55,6 +55,7 @@ function BbsAnswer() {
 
 	useEffect(() => {
 		if (!auth) {
+
 			alert("로그인 한 사용자만 게시글에 대한 답글을 작성할 수 있습니다 !");
 			navigate(-1);
 		}

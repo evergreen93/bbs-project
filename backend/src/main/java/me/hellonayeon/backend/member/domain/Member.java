@@ -6,16 +6,26 @@ public class Member {
 	private String pwd;
 	private String name;
 	private String email;
+	private String role;
+	private String enabled;
 
 	public Member() {
 	}
 
-	public Member(String id, String pwd, String name, String email, int auth) {
-		super();
+	public Member(
+			String id,
+			String pwd,
+			String name,
+			String email,
+			String role,
+			String enabled
+	) {
 		this.id = id;
 		this.pwd = pwd;
 		this.name = name;
 		this.email = email;
+		this.role = role;
+		this.enabled = enabled;
 	}
 
 	public String getId() {
@@ -50,13 +60,32 @@ public class Member {
 		this.email = email;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	@Override
 	public String toString() {
-		return "User{" +
-			"id='" + id + '\'' +
-			", pwd='" + pwd + '\'' +
-			", name='" + name + '\'' +
-			", email='" + email + '\'' +
-			'}';
+		return "Member{" +
+				"id='" + id + '\'' +
+				", pwd='" + pwd + '\'' +
+				", name='" + name + '\'' +
+				", email='" + email + '\'' +
+				", role='" + role + '\'' +
+				", enabled='" + enabled + '\'' +
+				'}';
 	}
+
+	public String getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(String enabled) {
+		this.enabled = enabled;
+	}
+
 }

@@ -149,7 +149,7 @@ function TableRow(props) {
 							<td>
 								<Arrow depth={bbs.depth}></Arrow> &nbsp; { /* 답글 화살표 */}
 
-								<span className="del-span">⚠️ 이 글은 작성자에 의해 삭제됐습니다.</span>
+								<span className="del-span">⚠️ 이 글은 글쓴이에 의해 삭제됐습니다.</span>
 							</td>
 						</>	
 					}

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
+
 function Join() {
 
 	const [id, setId] = useState("");

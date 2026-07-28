@@ -17,6 +17,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BbsDao {
 
+	Integer getBoardCount();
+
 	List<Bbs> getBbsSearchPageList(BbsListParam param);
 	Integer getBbsCount(BbsCountParam param);
 
@@ -33,4 +35,12 @@ public interface BbsDao {
 	Integer updateBbs(UpdateBbsParam param);
 
 	Integer deleteBbs(Integer seq);
+
+	Integer deleteReadHistoryByBbsRef(Integer seq);
+
+	Integer deleteBbsGroupByAdmin(Integer seq);
+
+	List<Bbs> findBoardsForAdmin();
+
+
 }

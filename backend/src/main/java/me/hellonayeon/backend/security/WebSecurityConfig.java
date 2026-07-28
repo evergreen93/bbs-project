@@ -40,6 +40,8 @@ public class WebSecurityConfig {
             .cors()
             .and()
             .authorizeRequests()
+            .antMatchers("/admin/**").hasRole("ADMIN")
+            .antMatchers("/attendance/**", "/vacation/**").authenticated()
             .antMatchers(HttpMethod.POST, "/bbs", "/comment").authenticated()
             .antMatchers(HttpMethod.PATCH, "/bbs", "/comment").authenticated()
             .antMatchers(HttpMethod.DELETE, "/bbs", "/comment").authenticated()
@@ -59,10 +61,12 @@ public class WebSecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(   "http://localhost:8090",
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:3001",
+                "http://localhost:8090",
                 "http://localhost:8080",
                 "https://bbs-front.onrender.com"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "OPTIONS", "PATCH", "DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "OPTIONS", "PATCH", "DELETE", "PUT"));
         configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
