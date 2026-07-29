@@ -20,10 +20,6 @@ import AdminBoardPage from "../admin/AdminBoardPage";
 
 function Router() {
 
-	localStorage.removeItem("bbs_access_token");
-	localStorage.removeItem("id");
-	localStorage.removeItem("role");
-
 	return (
 			<Routes>
 				<Route path="/" element={<Home />}></Route>
