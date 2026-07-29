@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "../../css/adminMember.css";
+import { useContext } from "react";
+import { HttpHeadersContext } from "../context/HttpHeadersProvider";
 
 function AdminMemberPage() {
 
@@ -15,14 +17,11 @@ function AdminMemberPage() {
 
     const getMemberList = async () => {
         try {
-            const response = await axios.get(
-                "/admin/members",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+            const response = await axios.get("/api/admin/members", {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
-            );
+            });
 
             console.log("회원 응답:", response);
             console.log("response 배열 여부:", Array.isArray(response));
@@ -51,7 +50,7 @@ function AdminMemberPage() {
         try {
 
             await axios.put(
-                `/admin/members/${member.id}/role`,
+                `/api/admin/members/${member.id}/role`,
                 {},
                 {
                     headers: {
@@ -76,7 +75,7 @@ function AdminMemberPage() {
         try {
 
             await axios.delete(
-                `/admin/members/${id}`,
+                `/api/admin/members/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
