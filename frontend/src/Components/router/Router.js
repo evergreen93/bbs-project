@@ -23,7 +23,7 @@ function Router() {
 	return (
 			<Routes>
 				<Route path="/admin/attendance" element={<AdminAttendancePage />}/>
-				<Route path="/" element={<Login />} />
+				<Route path="/" element={<Home />} />
 				<Route path="/admin/members" element={<AdminMemberPage />} />
 				<Route path="/admin/boards" element={<AdminBoardPage />} />
 				<Route path="/admin/vacations" element={<AdminVacationPage />}/>
