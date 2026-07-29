@@ -14,9 +14,7 @@ function AdminMemberPage() {
     }, []);
 
     const getMemberList = async () => {
-
         try {
-
             const response = await axios.get(
                 "/admin/members",
                 {
@@ -26,10 +24,22 @@ function AdminMemberPage() {
                 }
             );
 
-            setMembers(response.data);
+            console.log("회원 목록 응답:", response);
+
+            // Axios 기본 응답과 interceptor가 적용된 응답 모두 처리
+            const memberData = Array.isArray(response)
+                ? response
+                : response.data;
+
+            setMembers(
+                Array.isArray(memberData)
+                    ? memberData
+                    : []
+            );
 
         } catch (e) {
-            console.log(e);
+            console.error("회원 목록 조회 실패:", e);
+            setMembers([]);
         }
     };
 
@@ -82,10 +92,16 @@ function AdminMemberPage() {
         }
     };
 
-    const filteredMembers = members.filter(member =>
-        member.name.toLowerCase().includes(keyword.toLowerCase()) ||
-        member.id.toLowerCase().includes(keyword.toLowerCase())
-    );
+    const filteredMembers = Array.isArray(members)
+        ? members.filter(member =>
+            String(member?.name ?? "")
+                .toLowerCase()
+                .includes(keyword.toLowerCase()) ||
+            String(member?.id ?? "")
+                .toLowerCase()
+                .includes(keyword.toLowerCase())
+        )
+        : [];
 
     return (
 
