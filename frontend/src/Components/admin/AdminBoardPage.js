@@ -23,7 +23,7 @@ function AdminBoardPage() {
             setMessage("");
 
             const response = await axios.get(
-                "/admin/boards",
+                "/api/admin/boards",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -67,7 +67,7 @@ function AdminBoardPage() {
             setMessage("");
 
             await axios.delete(
-                `/admin/boards/${board.seq}`,
+                `/api/admin/boards/${board.seq}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
