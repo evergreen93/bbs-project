@@ -24,21 +24,20 @@ function AdminMemberPage() {
                 }
             );
 
-            console.log("회원 목록 응답:", response);
+            console.log("회원 응답:", response);
+            console.log("response 배열 여부:", Array.isArray(response));
+            console.log("response.data 배열 여부:", Array.isArray(response?.data));
 
-            // Axios 기본 응답과 interceptor가 적용된 응답 모두 처리
-            const memberData = Array.isArray(response)
+            const memberList = Array.isArray(response)
                 ? response
-                : response.data;
+                : Array.isArray(response?.data)
+                    ? response.data
+                    : [];
 
-            setMembers(
-                Array.isArray(memberData)
-                    ? memberData
-                    : []
-            );
+            setMembers(memberList);
 
         } catch (e) {
-            console.error("회원 목록 조회 실패:", e);
+            console.error("회원 조회 실패:", e);
             setMembers([]);
         }
     };
