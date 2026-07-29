@@ -1,21 +1,32 @@
-import "../../css/footer.css"
+import "../../css/footer.css";
 
 function Footer() {
-	return (
-        <footer className="py-1 bg-dark text-light footer">
-          <div className="container text-center">
-            <ul className="nav justify-content-center mb-3">
-              <li className="nav-item">
-                <a className="nav-link text-light" href="/">Top</a>
-              </li>
-            </ul>
+    return (
+        <footer className="office-footer">
+            <div className="container office-footer-container">
 
-            <p>
-              <small>Copyright &copy;</small>
-            </p>
-          </div>
+                <div className="office-footer-left">
+                    <div className="office-footer-logo">
+                        <i className="fas fa-building"></i>
+                    </div>
+
+                    <div>
+                        <h6>OfficeFlow</h6>
+                        <p>Smart Work Management System</p>
+                    </div>
+                </div>
+
+                <div className="office-footer-center">
+                    <a href="/">TOP</a>
+                </div>
+
+                <div className="office-footer-right">
+                    © 2026 OFFICEFLOW
+                </div>
+
+            </div>
         </footer>
-	);
+    );
 }
 
 export default Footer;
