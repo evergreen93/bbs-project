@@ -8,7 +8,7 @@ function AdminVacationPage() {
     const [processingId, setProcessingId] = useState(null);
     const [message, setMessage] = useState("");
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("bbs_access_token");
 
     const fetchPendingVacations = async () => {
         try {
@@ -49,7 +49,7 @@ function AdminVacationPage() {
             setProcessingId(vacationId);
             setMessage("");
 
-            await axios.patch(
+            await axios.post(
                 `/api/admin/vacations/${vacationId}/approve`,
                 {},
                 {
@@ -93,7 +93,7 @@ function AdminVacationPage() {
             setProcessingId(vacationId);
             setMessage("");
 
-            await axios.patch(
+            await axios.post(
                 `/api/admin/vacations/${vacationId}/reject`,
                 {},
                 {

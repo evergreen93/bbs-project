@@ -6,6 +6,8 @@ import { useNavigate } from "react-router";
 import { AuthContext } from "../context/AuthProvider";
 import { HttpHeadersContext } from "../context/HttpHeadersProvider";
 
+import "../../css/login.css";
+
 
 function Login() {
 
@@ -85,47 +87,157 @@ function Login() {
 	};
 
 	return (
-		<div>
-			<table className="table">
-				<tbody>
-				<tr>
-					<th className="col-3">아이디</th>
-					<td>
-						<input
-							type="text"
-							value={id}
-							onChange={changeId}
-							size="50px"
-						/>
-					</td>
-				</tr>
+		<main className="login-page">
+			<div className="login-background-decoration login-decoration-one"></div>
+			<div className="login-background-decoration login-decoration-two"></div>
 
-				<tr>
-					<th>비밀번호</th>
-					<td>
-						<input
-							type="password"
-							value={pwd}
-							onChange={changePwd}
-							size="50px"
-						/>
-					</td>
-				</tr>
-				</tbody>
-			</table>
+			<section className="login-container">
+				<div className="login-intro">
+					<div className="login-brand">
+						<div className="login-brand-icon">
+							<i className="fas fa-building"></i>
+						</div>
 
-			<br />
+						<div>
+							<p className="login-brand-name">OFFICEFLOW</p>
+							<span className="login-brand-caption">
+								Smart Work Management
+							</span>
+						</div>
+					</div>
 
-			<div className="my-1 d-flex justify-content-center">
-				<button
-					className="btn btn-outline-secondary"
-					onClick={login}
-				>
-					<i className="fas fa-sign-in-alt"></i>
-					{" "}로그인
-				</button>
-			</div>
-		</div>
+					<div className="login-intro-content">
+						<span className="login-intro-badge">
+							WORKSPACE
+						</span>
+
+						<h1>
+							업무와 소통을
+							<br />
+							하나의 공간에서
+						</h1>
+
+						<p>
+							근태 관리부터 휴가 신청, 사내 게시판까지
+							<br />
+							OFFICEFLOW에서 편리하게 관리하세요.
+						</p>
+					</div>
+
+					<div className="login-feature-list">
+						<div className="login-feature-item">
+							<div className="login-feature-icon">
+								<i className="far fa-clock"></i>
+							</div>
+
+							<div>
+								<strong>간편한 근태 관리</strong>
+								<span>출퇴근 현황을 빠르게 확인하세요.</span>
+							</div>
+						</div>
+
+						<div className="login-feature-item">
+							<div className="login-feature-icon">
+								<i className="far fa-calendar-check"></i>
+							</div>
+
+							<div>
+								<strong>휴가 신청 및 승인</strong>
+								<span>휴가 업무를 한곳에서 처리하세요.</span>
+							</div>
+						</div>
+
+						<div className="login-feature-item">
+							<div className="login-feature-icon">
+								<i className="far fa-comments"></i>
+							</div>
+
+							<div>
+								<strong>사내 커뮤니케이션</strong>
+								<span>게시판을 통해 소식을 공유하세요.</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="login-form-area">
+					<div className="login-form-card">
+						<div className="login-form-heading">
+							<span className="login-form-eyebrow">
+								WELCOME BACK
+							</span>
+
+							<h2>로그인</h2>
+
+							<p>
+								OFFICEFLOW 계정으로 로그인해주세요.
+							</p>
+						</div>
+
+						<div className="login-form">
+							<div className="login-input-group">
+								<label htmlFor="login-id">
+									아이디
+								</label>
+
+								<div className="login-input-wrapper">
+									<i className="far fa-user"></i>
+
+									<input
+										id="login-id"
+										type="text"
+										value={id}
+										onChange={changeId}
+										placeholder="아이디를 입력해주세요"
+										autoComplete="username"
+									/>
+								</div>
+							</div>
+
+							<div className="login-input-group">
+								<label htmlFor="login-password">
+									비밀번호
+								</label>
+
+								<div className="login-input-wrapper">
+									<i className="fas fa-lock"></i>
+
+									<input
+										id="login-password"
+										type="password"
+										value={pwd}
+										onChange={changePwd}
+										placeholder="비밀번호를 입력해주세요"
+										autoComplete="current-password"
+									/>
+								</div>
+							</div>
+
+							<button
+								type="button"
+								className="login-submit-button"
+								onClick={login}
+							>
+								<span>로그인</span>
+								<i className="fas fa-arrow-right"></i>
+							</button>
+						</div>
+
+						<div className="login-security-message">
+							<i className="fas fa-shield-alt"></i>
+
+							<span>
+								안전한 로그인을 위해 계정 정보를 보호해주세요.
+							</span>
+						</div>
+					</div>
+
+					<p className="login-copyright">
+						© 2026 OFFICEFLOW. All rights reserved.
+					</p>
+				</div>
+			</section>
+		</main>
 	);
 }
 

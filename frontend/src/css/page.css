@@ -1,54 +1,80 @@
+.bbs-pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 25px 20px 28px;
+  border-top: 1px solid #eef1f6;
+}
+
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
-  }
-  
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  ul.pagination li {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    border: 1px solid #e2e2e2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pagination li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination li a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #e0e6ef;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #657086;
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+          border-color 0.2s ease,
+          background 0.2s ease,
+          color 0.2s ease,
+          transform 0.2s ease;
+}
+
+.pagination li a:hover {
+  border-color: #a9c1ee;
+  background: #f2f6ff;
+  color: #3976e8;
+  transform: translateY(-1px);
+}
+
+.pagination li.active a {
+  border-color: #3976e8;
+  background: #3976e8;
+  box-shadow: 0 5px 13px rgba(57, 118, 232, 0.23);
+  color: #ffffff;
+}
+
+.pagination li.disabled a {
+  border-color: #edf0f4;
+  background: #fafbfc;
+  color: #c3c9d3;
+  cursor: default;
+  pointer-events: none;
+}
+
+@media (max-width: 500px) {
+  .pagination {
+    gap: 4px;
   }
 
-  ul.pagination li:first-child{
-    border-radius: 5px 0 0 5px;
+  .pagination li a {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border-radius: 8px;
+    font-size: 12px;
   }
-
-  ul.pagination li:last-child{
-    border-radius: 0 5px 5px 0;
-  }
-  
-  ul.pagination li a {
-    text-decoration: none;
-    color: #337ab7;
-    font-size: 1rem;
-  }
-  
-  ul.pagination li.active a {
-    color: white;
-  }
-
-  ul.pagination li.active {
-    background-color: #337ab7;
-  }
-  
-  ul.pagination li a:hover,
-  ul.pagination li a.active {
-    color: blue;
-  }
-  
-  .page-selection {
-    width: 48px;
-    height: 30px;
-    color: #337ab7;
-  }
+}

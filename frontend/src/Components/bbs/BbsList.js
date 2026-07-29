@@ -1,183 +1,357 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Pagination from "react-js-pagination";
 
 import "../../css/bbslist.css";
 import "../../css/page.css";
 
-function BbsList() {
+const ITEMS_PER_PAGE = 10;
 
+function BbsList() {
 	const [bbsList, setBbsList] = useState([]);
 
-	// 검색용 Hook
 	const [choiceVal, setChoiceVal] = useState("");
 	const [searchVal, setSearchVal] = useState("");
 
-	// Paging
 	const [page, setPage] = useState(1);
 	const [totalCnt, setTotalCnt] = useState(0);
 
-	// Link 용 (함수) 
-	let navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
 
+	/* 게시글 목록 조회 */
+	const getBbsList = async (
+		choice = choiceVal,
+		search = searchVal,
+		selectedPage = page
+	) => {
+		setLoading(true);
+		setErrorMessage("");
 
-	/* [GET /bbs]: 게시글 목록 */
-	const getBbsList = async (choice, search, page) => {
-
-		await axios.get("/api/bbs", { params: { "choice": choice, "search": search, "page": page } })
-			.then((resp) => {
-				console.log("[BbsList.js] useEffect() success :D");
-				console.log(resp.data);
-
-				setBbsList(resp.data.bbsList);
-				setTotalCnt(resp.data.pageCnt);
-			})
-			.catch((err) => {
-				console.log("[BbsList.js] useEffect() error :<");
-				console.log(err);
-
+		try {
+			const resp = await axios.get("/api/bbs", {
+				params: {
+					choice,
+					search,
+					page: selectedPage
+				}
 			});
-	}
+
+			console.log("[BbsList.js] getBbsList() success");
+			console.log(resp.data);
+
+			setBbsList(resp.data.bbsList || []);
+			setTotalCnt(resp.data.pageCnt || 0);
+		} catch (err) {
+			console.error("[BbsList.js] getBbsList() error");
+			console.error(err);
+
+			setBbsList([]);
+			setTotalCnt(0);
+			setErrorMessage("게시글을 불러오지 못했습니다.");
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	useEffect(() => {
 		getBbsList("", "", 1);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
+	const changeChoice = (event) => {
+		setChoiceVal(event.target.value);
+	};
 
-	const changeChoice = (event) => { setChoiceVal(event.target.value); }
-	const changeSearch = (event) => { setSearchVal(event.target.value); }
+	const changeSearch = (event) => {
+		setSearchVal(event.target.value);
+	};
+
 	const search = () => {
-		console.log("[BbsList.js searchBtn()] choiceVal=" + choiceVal + ", searchVal=" + searchVal);
+		const trimmedSearch = searchVal.trim();
 
-		navigate("/bbslist");
-		getBbsList(choiceVal, searchVal, 1);
-	}
+		setPage(1);
+		getBbsList(choiceVal, trimmedSearch, 1);
+	};
 
-	const changePage = (page) => {
-		setPage(page);
-		getBbsList(choiceVal, searchVal, page);
-	}
+	const handleSearchKeyDown = (event) => {
+		if (event.key === "Enter") {
+			search();
+		}
+	};
+
+	const resetSearch = () => {
+		setChoiceVal("");
+		setSearchVal("");
+		setPage(1);
+
+		getBbsList("", "", 1);
+	};
+
+	const changePage = (selectedPage) => {
+		setPage(selectedPage);
+		getBbsList(choiceVal, searchVal.trim(), selectedPage);
+
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth"
+		});
+	};
 
 	return (
+		<div className="bbs-list-page">
+			<section className="bbs-list-header">
+				<div>
+					<p className="bbs-list-eyebrow">OFFICEFLOW BOARD</p>
 
-		<div>
+					<h1>사내 게시판</h1>
 
-			{ /* 검색 */}
-			<table className="search">
-				<tbody>
-					<tr>
-						<td>
-							<select className="custom-select" value={choiceVal} onChange={changeChoice}>
-								<option>검색 옵션 선택</option>
-								<option value="title">제목</option>
-								<option value="content">내용</option>
-								<option value="writer">작성자</option>
-							</select>
-						</td>
-						<td>
-							<input type="text" className="form-control" placeholder="검색어" value={searchVal} onChange={changeSearch} />
-						</td>
-						<td>
-							<button type="button" className="btn btn-outline-secondary" onClick={search}><i className="fas fa-search"></i> 검색</button>
-						</td>
-					</tr>
-				</tbody>
-			</table><br />
+					<p className="bbs-list-description">
+						사내 소식과 다양한 의견을 자유롭게 공유해보세요.
+					</p>
+				</div>
 
-			<table className="table table-hover">
-				<thead>
-					<tr>
-						<th className="col-1">번호</th>
-						<th className="col-8">제목</th>
-						<th className="col-3">작성자</th>
-					</tr>
-				</thead>
+				<Link className="bbs-write-button" to="/bbswrite">
+					<i className="fas fa-pen" />
+					<span>새 글 작성</span>
+				</Link>
+			</section>
 
-				<tbody>
-					{
-						bbsList.map(function (bbs, idx) {
-							return (
-								<TableRow obj={bbs} key={idx} cnt={idx + 1} />
-							)
-						})
-					}
-				</tbody>
-			</table>
+			<section className="bbs-search-card">
+				<div className="bbs-search-heading">
+					<div className="bbs-search-icon">
+						<i className="fas fa-search" />
+					</div>
 
-			<Pagination className="pagination"
-				activePage={page}
-				itemsCountPerPage={10}
-				totalItemsCount={totalCnt}
-				pageRangeDisplayed={5}
-				prevPageText={"‹"}
-				nextPageText={"›"}
-				onChange={changePage} />
-				
-			<div className="my-5 d-flex justify-content-center">
-				<Link className="btn btn-outline-secondary" to="/bbswrite"><i className="fas fa-pen"></i> &nbsp; 글쓰기</Link>
+					<div>
+						<h2>게시글 검색</h2>
+						<p>제목, 내용 또는 작성자로 게시글을 찾아보세요.</p>
+					</div>
+				</div>
+
+				<div className="bbs-search-form">
+					<div className="bbs-search-select-wrapper">
+						<select
+							className="bbs-search-select"
+							value={choiceVal}
+							onChange={changeChoice}
+							aria-label="검색 조건"
+						>
+							<option value="">전체</option>
+							<option value="title">제목</option>
+							<option value="content">내용</option>
+							<option value="writer">작성자</option>
+						</select>
+
+						<i className="fas fa-chevron-down" />
+					</div>
+
+					<div className="bbs-search-input-wrapper">
+						<i className="fas fa-search" />
+
+						<input
+							type="text"
+							className="bbs-search-input"
+							placeholder="검색어를 입력하세요"
+							value={searchVal}
+							onChange={changeSearch}
+							onKeyDown={handleSearchKeyDown}
+						/>
+					</div>
+
+					<button
+						type="button"
+						className="bbs-search-button"
+						onClick={search}
+					>
+						검색
+					</button>
+
+					{(choiceVal || searchVal) && (
+						<button
+							type="button"
+							className="bbs-search-reset-button"
+							onClick={resetSearch}
+							title="검색 초기화"
+						>
+							<i className="fas fa-redo-alt" />
+							초기화
+						</button>
+					)}
+				</div>
+			</section>
+
+			<section className="bbs-list-card">
+				<div className="bbs-list-card-header">
+					<div>
+						<h2>
+							<i className="far fa-clipboard" />
+							게시글 목록
+						</h2>
+
+						<p>
+							총 <strong>{totalCnt}</strong>개의 게시글이 있습니다.
+						</p>
+					</div>
+				</div>
+
+				<div className="bbs-table-wrapper">
+					<table className="bbs-table">
+						<thead>
+						<tr>
+							<th className="bbs-number-column">번호</th>
+							<th>제목</th>
+							<th className="bbs-writer-column">작성자</th>
+						</tr>
+						</thead>
+
+						<tbody>
+						{loading ? (
+							<tr>
+								<td colSpan="3">
+									<div className="bbs-status-box">
+										<div className="bbs-loading-spinner" />
+										<p>게시글을 불러오는 중입니다.</p>
+									</div>
+								</td>
+							</tr>
+						) : errorMessage ? (
+							<tr>
+								<td colSpan="3">
+									<div className="bbs-status-box bbs-error-box">
+										<i className="fas fa-exclamation-circle" />
+										<p>{errorMessage}</p>
+
+										<button
+											type="button"
+											onClick={() =>
+												getBbsList(
+													choiceVal,
+													searchVal,
+													page
+												)
+											}
+										>
+											다시 시도
+										</button>
+									</div>
+								</td>
+							</tr>
+						) : bbsList.length === 0 ? (
+							<tr>
+								<td colSpan="3">
+									<div className="bbs-status-box bbs-empty-box">
+										<div className="bbs-empty-icon">
+											<i className="far fa-file-alt" />
+										</div>
+
+										<h3>등록된 게시글이 없습니다.</h3>
+										<p>
+											첫 번째 게시글을 작성해보세요.
+										</p>
+									</div>
+								</td>
+							</tr>
+						) : (
+							bbsList.map((bbs, idx) => (
+								<TableRow
+									key={bbs.seq}
+									bbs={bbs}
+									number={
+										(page - 1) * ITEMS_PER_PAGE +
+										idx +
+										1
+									}
+								/>
+							))
+						)}
+						</tbody>
+					</table>
+				</div>
+
+				{!loading && !errorMessage && totalCnt > 0 && (
+					<div className="bbs-pagination-wrapper">
+						<Pagination
+							activePage={page}
+							itemsCountPerPage={ITEMS_PER_PAGE}
+							totalItemsCount={totalCnt}
+							pageRangeDisplayed={5}
+							prevPageText="‹"
+							nextPageText="›"
+							firstPageText="«"
+							lastPageText="»"
+							onChange={changePage}
+						/>
+					</div>
+				)}
+			</section>
+
+			<div className="bbs-mobile-write-area">
+				<Link className="bbs-write-button" to="/bbswrite">
+					<i className="fas fa-pen" />
+					<span>새 글 작성</span>
+				</Link>
 			</div>
-
 		</div>
 	);
 }
 
-/* 글 목록 테이블 행 컴포넌트 */
-function TableRow(props) {
-	const bbs = props.obj;
+/* 게시글 목록 행 */
+function TableRow({ bbs, number }) {
+	const isDeleted = Number(bbs.del) !== 0;
+	const depth = Number(bbs.depth) || 0;
 
 	return (
-			<tr>
-				
-					<th>{props.cnt}</th>
-					{
-						(bbs.del == 0) ?
-						// 삭제되지 않은 게시글
-						<>
-							<td >
-								<Arrow depth={bbs.depth}></Arrow> &nbsp; { /* 답글 화살표 */}
+		<tr className={isDeleted ? "bbs-deleted-row" : ""}>
+			<td className="bbs-number-cell">{number}</td>
 
-								<Link to={{ pathname: `/bbsdetail/${bbs.seq}` }}> { /* 게시글 상세 링크 */}
-									<span className="underline bbs-title" >{bbs.title} </span> { /* 게시글 제목 */}
-								</Link>
-							</td>
-							<td>{bbs.id}</td>
-						</>
-						:
-						// 삭제된 게시글
-						<>
-							<td>
-								<Arrow depth={bbs.depth}></Arrow> &nbsp; { /* 답글 화살표 */}
+			<td className="bbs-title-cell">
+				<div
+					className="bbs-title-content"
+					style={{
+						paddingLeft: `${Math.min(depth, 6) * 24}px`
+					}}
+				>
+					{depth > 0 && (
+						<span className="bbs-reply-marker">
+                            <i className="fas fa-level-up-alt" />
+                            <span>답글</span>
+                        </span>
+					)}
 
-								<span className="del-span">⚠️ 이 글은 글쓴이에 의해 삭제됐습니다.</span>
-							</td>
-						</>	
-					}
-					
-				
-			</tr>
-		
+					{isDeleted ? (
+						<span className="bbs-deleted-message">
+                            <i className="fas fa-exclamation-triangle" />
+                            작성자에 의해 삭제된 게시글입니다.
+                        </span>
+					) : (
+						<Link
+							className="bbs-title-link"
+							to={`/bbsdetail/${bbs.seq}`}
+						>
+							<span>{bbs.title}</span>
+							<i className="fas fa-chevron-right" />
+						</Link>
+					)}
+				</div>
+			</td>
+
+			<td className="bbs-writer-cell">
+				{!isDeleted && (
+					<div className="bbs-writer">
+						<div className="bbs-writer-avatar">
+							{bbs.id
+								? bbs.id.charAt(0).toUpperCase()
+								: "U"}
+						</div>
+
+						<span>{bbs.id}</span>
+					</div>
+				)}
+			</td>
+		</tr>
 	);
-}
-
-const tap = "\u00A0\u00A0\u00A0\u00A0";
-function Arrow( props ) {
-	const depth = props.depth;
-
-	if (depth === 0) {
-		return null;
-	}
-
-	const taps = [];
-	for(let i = 0; i < depth; i++) {
-		taps.push(tap);
-	}
-
-	return (
-		<>
-			{taps} <i className="fas fa-long-arrow-alt-right"></i>
-		</> 
-	 );
 }
 
 export default BbsList;

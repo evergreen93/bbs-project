@@ -1,0 +1,500 @@
+.bbs-form-page {
+    width: 100%;
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 34px 28px 70px;
+    color: #172033;
+}
+
+/* 페이지 상단 */
+
+.bbs-form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.bbs-form-eyebrow {
+    margin: 0 0 8px;
+    color: #3976e8;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+}
+
+.bbs-form-header h1 {
+    margin: 0;
+    color: #172033;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1.2px;
+}
+
+.bbs-form-description {
+    margin: 10px 0 0;
+    color: #7d8799;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.bbs-form-list-button {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 17px;
+    border: 1px solid #dfe5ef;
+    border-radius: 11px;
+    background: #ffffff;
+    color: #687388;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+            border-color 0.2s ease,
+            background 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+}
+
+.bbs-form-list-button:hover {
+    border-color: #b9c9e7;
+    background: #f5f8ff;
+    color: #3976e8;
+    transform: translateY(-1px);
+}
+
+/* 부모 게시글 카드 */
+
+.bbs-parent-card {
+    margin-bottom: 22px;
+    overflow: hidden;
+    border: 1px solid #dce7f8;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(33, 48, 79, 0.05);
+}
+
+.bbs-parent-card-header {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 20px 23px;
+    border-bottom: 1px solid #e8eef8;
+    background: #f7faff;
+}
+
+.bbs-parent-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #e7f0ff;
+    color: #3976e8;
+    font-size: 15px;
+}
+
+.bbs-parent-card-header h2 {
+    margin: 0 0 4px;
+    color: #2d3950;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.bbs-parent-card-header p {
+    margin: 0;
+    color: #8a95a8;
+    font-size: 13px;
+}
+
+.bbs-parent-information {
+    padding: 8px 23px;
+}
+
+.bbs-parent-information-row {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+    align-items: center;
+    min-height: 65px;
+    border-bottom: 1px solid #eef1f6;
+}
+
+.bbs-parent-information-row:last-child {
+    border-bottom: 0;
+}
+
+.bbs-parent-label {
+    color: #8993a5;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.bbs-parent-writer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #4c586d;
+    font-size: 14px;
+}
+
+.bbs-parent-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #eaf2ff;
+    color: #3976e8;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.bbs-parent-title {
+    overflow: hidden;
+    margin: 0;
+    color: #344057;
+    font-size: 14px;
+    font-weight: 650;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 작성 카드 */
+
+.bbs-form-card {
+    overflow: hidden;
+    border: 1px solid #e7ecf5;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(33, 48, 79, 0.055);
+}
+
+.bbs-form-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 24px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.bbs-form-card-title {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.bbs-form-card-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #edf4ff;
+    color: #3976e8;
+    font-size: 15px;
+}
+
+.bbs-form-card-header h2 {
+    margin: 0 0 4px;
+    color: #29354c;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.bbs-form-card-header p {
+    margin: 0;
+    color: #9099aa;
+    font-size: 13px;
+}
+
+.bbs-form-required-guide {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #8d96a7;
+    font-size: 12px;
+}
+
+.bbs-form-required-guide i {
+    color: #3976e8;
+    font-size: 5px;
+}
+
+.bbs-form-body {
+    padding: 27px 25px 30px;
+}
+
+.bbs-form-group {
+    margin-bottom: 24px;
+}
+
+.bbs-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.bbs-form-group > label,
+.bbs-form-label-row label {
+    margin: 0;
+    color: #3b465b;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.bbs-form-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 9px;
+}
+
+.bbs-required-mark {
+    margin-left: 4px;
+    color: #3976e8;
+}
+
+.bbs-character-count {
+    color: #a0a8b6;
+    font-size: 12px;
+}
+
+.bbs-readonly-input-wrapper {
+    position: relative;
+    margin-top: 9px;
+}
+
+.bbs-readonly-input-wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    color: #9aa5b6;
+    font-size: 14px;
+    transform: translateY(-50%);
+}
+
+.bbs-readonly-input-wrapper input,
+.bbs-form-input,
+.bbs-form-textarea {
+    width: 100%;
+    border: 1px solid #dfe5ef;
+    border-radius: 11px;
+    outline: none;
+    color: #344057;
+    font-family: inherit;
+    font-size: 14px;
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+}
+
+.bbs-readonly-input-wrapper input {
+    height: 47px;
+    padding: 0 15px 0 43px;
+    background: #f6f8fb;
+    color: #778195;
+    cursor: default;
+}
+
+.bbs-form-input {
+    height: 48px;
+    padding: 0 15px;
+    background: #fbfcff;
+}
+
+.bbs-form-textarea {
+    min-height: 260px;
+    padding: 16px;
+    background: #fbfcff;
+    line-height: 1.7;
+    resize: vertical;
+}
+
+.bbs-form-input::placeholder,
+.bbs-form-textarea::placeholder {
+    color: #aab2c1;
+}
+
+.bbs-form-input:focus,
+.bbs-form-textarea:focus {
+    border-color: #6a9af2;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(57, 118, 232, 0.1);
+}
+
+/* 하단 버튼 */
+
+.bbs-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px 25px;
+    border-top: 1px solid #edf0f5;
+    background: #fbfcfe;
+}
+
+.bbs-form-cancel-button,
+.bbs-form-submit-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 105px;
+    height: 45px;
+    padding: 0 18px;
+    border-radius: 11px;
+    font-size: 14px;
+    font-weight: 750;
+    cursor: pointer;
+    transition:
+            border-color 0.2s ease,
+            background 0.2s ease,
+            box-shadow 0.2s ease,
+            transform 0.2s ease;
+}
+
+.bbs-form-cancel-button {
+    border: 1px solid #dce2eb;
+    background: #ffffff;
+    color: #727d90;
+}
+
+.bbs-form-cancel-button:hover:not(:disabled) {
+    border-color: #c8d0dc;
+    background: #f5f7fa;
+    color: #495469;
+}
+
+.bbs-form-submit-button {
+    border: 1px solid #3976e8;
+    background: linear-gradient(135deg, #3976e8, #245fd0);
+    box-shadow: 0 8px 18px rgba(48, 105, 218, 0.2);
+    color: #ffffff;
+}
+
+.bbs-form-submit-button:hover:not(:disabled) {
+    border-color: #285fc7;
+    background: linear-gradient(135deg, #2e6edf, #1d54bf);
+    box-shadow: 0 10px 22px rgba(48, 105, 218, 0.27);
+    transform: translateY(-1px);
+}
+
+.bbs-form-cancel-button:disabled,
+.bbs-form-submit-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.bbs-button-spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: bbs-form-spin 0.7s linear infinite;
+}
+
+@keyframes bbs-form-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 반응형 */
+
+@media (max-width: 700px) {
+    .bbs-form-page {
+        padding: 25px 16px 55px;
+    }
+
+    .bbs-form-header {
+        align-items: flex-start;
+    }
+
+    .bbs-form-header h1 {
+        font-size: 28px;
+    }
+
+    .bbs-form-list-button {
+        padding: 0 13px;
+    }
+
+    .bbs-form-list-button span {
+        display: none;
+    }
+
+    .bbs-parent-information-row {
+        grid-template-columns: 80px minmax(0, 1fr);
+    }
+
+    .bbs-form-card-header {
+        align-items: flex-start;
+    }
+
+    .bbs-form-required-guide {
+        display: none;
+    }
+}
+
+@media (max-width: 500px) {
+    .bbs-form-page {
+        padding: 20px 11px 45px;
+    }
+
+    .bbs-form-header {
+        margin-bottom: 20px;
+    }
+
+    .bbs-form-description {
+        font-size: 14px;
+    }
+
+    .bbs-parent-card,
+    .bbs-form-card {
+        border-radius: 15px;
+    }
+
+    .bbs-parent-card-header,
+    .bbs-form-card-header {
+        padding: 18px 16px;
+    }
+
+    .bbs-parent-information {
+        padding: 5px 16px;
+    }
+
+    .bbs-parent-information-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 14px 0;
+    }
+
+    .bbs-form-body {
+        padding: 22px 16px 25px;
+    }
+
+    .bbs-form-textarea {
+        min-height: 230px;
+    }
+
+    .bbs-form-actions {
+        padding: 17px 16px;
+    }
+
+    .bbs-form-cancel-button,
+    .bbs-form-submit-button {
+        flex: 1;
+    }
+}

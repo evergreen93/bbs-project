@@ -1,0 +1,571 @@
+.bbs-detail-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 34px 28px 70px;
+    color: #172033;
+}
+
+/* 페이지 상단 */
+
+.bbs-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 25px;
+}
+
+.bbs-detail-eyebrow {
+    margin: 0 0 8px;
+    color: #3976e8;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+}
+
+.bbs-detail-header h1 {
+    margin: 0;
+    color: #172033;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1.2px;
+}
+
+.bbs-detail-description {
+    margin: 10px 0 0;
+    color: #7d8799;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.bbs-detail-list-button {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 17px;
+    border: 1px solid #dfe5ef;
+    border-radius: 11px;
+    background: #ffffff;
+    color: #687388;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+            border-color 0.2s ease,
+            background 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+}
+
+.bbs-detail-list-button:hover {
+    border-color: #b9c9e7;
+    background: #f5f8ff;
+    color: #3976e8;
+    transform: translateY(-1px);
+}
+
+/* 게시글 카드 */
+
+.bbs-detail-card {
+    overflow: hidden;
+    border: 1px solid #e7ecf5;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(33, 48, 79, 0.055);
+}
+
+.bbs-detail-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 28px 28px 25px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.bbs-detail-title-area {
+    min-width: 0;
+    flex: 1;
+}
+
+.bbs-detail-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 14px;
+    padding: 6px 10px;
+    border-radius: 7px;
+    background: #edf4ff;
+    color: #3976e8;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.bbs-detail-title-area h2 {
+    margin: 0;
+    color: #222e44;
+    font-size: 27px;
+    font-weight: 800;
+    line-height: 1.45;
+    letter-spacing: -0.7px;
+    word-break: break-word;
+}
+
+.bbs-detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-top: 22px;
+}
+
+.bbs-detail-writer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bbs-detail-avatar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 37px;
+    height: 37px;
+    border-radius: 50%;
+    background: #eaf2ff;
+    color: #3976e8;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.bbs-detail-writer > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.bbs-detail-meta-label {
+    color: #9ba4b4;
+    font-size: 10px;
+}
+
+.bbs-detail-writer strong {
+    color: #4b566b;
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.bbs-detail-meta-divider {
+    width: 1px;
+    height: 20px;
+    background: #e2e6ed;
+}
+
+.bbs-detail-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #8a94a6;
+    font-size: 12px;
+}
+
+.bbs-detail-meta-item i {
+    color: #9eabba;
+}
+
+/* 게시글 버튼 */
+
+.bbs-detail-actions {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.bbs-detail-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 39px;
+    padding: 0 13px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 750;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+            border-color 0.2s ease,
+            background 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+}
+
+.bbs-detail-reply-button {
+    border: 1px solid #b8cbef;
+    background: #f4f7ff;
+    color: #3976e8;
+}
+
+.bbs-detail-reply-button:hover {
+    border-color: #8eafe9;
+    background: #eaf1ff;
+    color: #2861ca;
+    transform: translateY(-1px);
+}
+
+.bbs-detail-edit-button {
+    border: 1px solid #dce2eb;
+    background: #ffffff;
+    color: #687388;
+}
+
+.bbs-detail-edit-button:hover {
+    border-color: #bfc9d8;
+    background: #f6f8fb;
+    color: #445068;
+    transform: translateY(-1px);
+}
+
+.bbs-detail-delete-button {
+    border: 1px solid #f0c9cc;
+    background: #fff7f7;
+    color: #d75a62;
+}
+
+.bbs-detail-delete-button:hover:not(:disabled) {
+    border-color: #e9aeb3;
+    background: #fff0f1;
+    color: #c84049;
+    transform: translateY(-1px);
+}
+
+.bbs-detail-delete-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+/* 게시글 내용 */
+
+.bbs-detail-content {
+    min-height: 350px;
+    padding: 38px 32px 50px;
+}
+
+.bbs-detail-content p {
+    margin: 0;
+    color: #3f4a5f;
+    font-size: 15px;
+    line-height: 1.9;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.bbs-detail-empty-content {
+    color: #9ca5b4 !important;
+}
+
+.bbs-detail-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 19px 27px;
+    border-top: 1px solid #edf0f5;
+    background: #fbfcfe;
+}
+
+.bbs-detail-bottom-list-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #687388;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.bbs-detail-bottom-list-button:hover {
+    color: #3976e8;
+}
+
+/* 댓글 전체 카드 */
+
+.bbs-comment-section {
+    margin-top: 25px;
+    overflow: hidden;
+    border: 1px solid #e7ecf5;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(33, 48, 79, 0.055);
+}
+
+.bbs-comment-section-header {
+    padding: 21px 24px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.bbs-comment-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.bbs-comment-heading-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #edf4ff;
+    color: #3976e8;
+    font-size: 16px;
+}
+
+.bbs-comment-heading h2 {
+    margin: 0 0 4px;
+    color: #29354c;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.bbs-comment-heading p {
+    margin: 0;
+    color: #9099aa;
+    font-size: 13px;
+}
+
+.bbs-comment-section-body {
+    padding: 24px;
+}
+
+.bbs-comment-write-area {
+    margin-bottom: 28px;
+    padding-bottom: 27px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.bbs-comment-login-guide {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding: 18px 20px;
+    border: 1px solid #e2e8f2;
+    border-radius: 12px;
+    background: #f8faff;
+}
+
+.bbs-comment-login-guide > i {
+    color: #7c94bd;
+    font-size: 19px;
+}
+
+.bbs-comment-login-guide strong {
+    color: #4b5870;
+    font-size: 13px;
+}
+
+.bbs-comment-login-guide p {
+    margin: 4px 0 0;
+    color: #929bad;
+    font-size: 12px;
+}
+
+.bbs-comment-list-area {
+    min-width: 0;
+}
+
+/* 로딩 및 오류 */
+
+.bbs-detail-status-card {
+    display: flex;
+    min-height: 400px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 25px;
+    border: 1px solid #e7ecf5;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(33, 48, 79, 0.055);
+    color: #8a94a5;
+    text-align: center;
+}
+
+.bbs-detail-status-card h2 {
+    margin: 18px 0 0;
+    color: #4d586c;
+    font-size: 18px;
+}
+
+.bbs-detail-status-card p {
+    margin: 10px 0 0;
+    font-size: 13px;
+}
+
+.bbs-detail-spinner {
+    width: 38px;
+    height: 38px;
+    border: 3px solid #e2eaf8;
+    border-top-color: #3976e8;
+    border-radius: 50%;
+    animation: bbs-detail-spin 0.8s linear infinite;
+}
+
+.bbs-detail-button-spinner {
+    width: 13px;
+    height: 13px;
+    border: 2px solid rgba(215, 90, 98, 0.3);
+    border-top-color: #d75a62;
+    border-radius: 50%;
+    animation: bbs-detail-spin 0.7s linear infinite;
+}
+
+@keyframes bbs-detail-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.bbs-detail-error-icon {
+    color: #df666d;
+    font-size: 35px;
+}
+
+.bbs-detail-error-actions {
+    display: flex;
+    gap: 9px;
+    margin-top: 20px;
+}
+
+.bbs-detail-error-actions button,
+.bbs-detail-error-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 15px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.bbs-detail-error-actions button {
+    border: 1px solid #3976e8;
+    background: #3976e8;
+    color: #ffffff;
+}
+
+.bbs-detail-error-actions a {
+    border: 1px solid #dce2eb;
+    background: #ffffff;
+    color: #687388;
+}
+
+/* 반응형 */
+
+@media (max-width: 850px) {
+    .bbs-detail-card-header {
+        flex-direction: column;
+    }
+
+    .bbs-detail-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 700px) {
+    .bbs-detail-page {
+        padding: 25px 16px 55px;
+    }
+
+    .bbs-detail-header {
+        align-items: flex-start;
+    }
+
+    .bbs-detail-header h1 {
+        font-size: 28px;
+    }
+
+    .bbs-detail-list-button span {
+        display: none;
+    }
+
+    .bbs-detail-title-area h2 {
+        font-size: 23px;
+    }
+
+    .bbs-detail-meta-divider {
+        display: none;
+    }
+
+    .bbs-detail-meta {
+        gap: 13px 18px;
+    }
+
+    .bbs-detail-content {
+        min-height: 280px;
+        padding: 30px 23px 40px;
+    }
+}
+
+@media (max-width: 500px) {
+    .bbs-detail-page {
+        padding: 20px 11px 45px;
+    }
+
+    .bbs-detail-card,
+    .bbs-comment-section,
+    .bbs-detail-status-card {
+        border-radius: 15px;
+    }
+
+    .bbs-detail-card-header {
+        padding: 23px 17px 20px;
+    }
+
+    .bbs-detail-actions {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .bbs-detail-action-button {
+        padding: 0 9px;
+    }
+
+    .bbs-detail-content {
+        padding: 25px 18px 35px;
+    }
+
+    .bbs-detail-content p {
+        font-size: 14px;
+    }
+
+    .bbs-detail-card-footer {
+        padding: 17px 18px;
+    }
+
+    .bbs-comment-section-header {
+        padding: 18px 16px;
+    }
+
+    .bbs-comment-section-body {
+        padding: 18px 14px;
+    }
+
+    .bbs-comment-login-guide {
+        padding: 16px;
+    }
+}

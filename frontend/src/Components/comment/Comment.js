@@ -1,147 +1,324 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom"
+
 import { AuthContext } from "../context/AuthProvider";
 import { HttpHeadersContext } from "../context/HttpHeadersProvider";
 
+import "../../css/comment.css";
 
 /* 댓글 컴포넌트 */
-function Comment(props) {
-	const {auth, setAuth} = useContext(AuthContext);
-	const {headers, setHeaders} = useContext(HttpHeadersContext);
-	const comment = props.obj;
+function Comment({ obj: comment }) {
+	const { auth } = useContext(AuthContext);
+	const { headers } = useContext(HttpHeadersContext);
 
-	const navigate = useNavigate();
+	const [isEditing, setIsEditing] = useState(false);
+	const [content, setContent] = useState(
+		comment.content || ""
+	);
 
-	const [show, setShow] = useState(false);
+	const [savedContent, setSavedContent] = useState(
+		comment.content || ""
+	);
 
-	const [content, setContent] = useState(comment.content);
+	const [isDeleted, setIsDeleted] = useState(
+		Number(comment.del) !== 0
+	);
+
+	const [updating, setUpdating] = useState(false);
+	const [deleting, setDeleting] = useState(false);
+
+	const loginId =
+		localStorage.getItem("id") || auth || "";
+
+	const isWriter =
+		Boolean(loginId) && loginId === comment.id;
+
 	const changeContent = (event) => {
 		setContent(event.target.value);
 	};
 
+	const formatDate = (dateValue) => {
+		if (!dateValue) {
+			return "";
+		}
+
+		const date = new Date(dateValue);
+
+		if (Number.isNaN(date.getTime())) {
+			return dateValue;
+		}
+
+		return date.toLocaleString("ko-KR", {
+			year: "numeric",
+			month: "2-digit",
+			day: "2-digit",
+			hour: "2-digit",
+			minute: "2-digit"
+		});
+	};
+
+	const openUpdate = () => {
+		setContent(savedContent);
+		setIsEditing(true);
+	};
+
+	const cancelUpdate = () => {
+		setContent(savedContent);
+		setIsEditing(false);
+	};
+
 	/* 댓글 수정 */
 	const updateComment = async () => {
+		const trimmedContent = content.trim();
+
+		if (!trimmedContent) {
+			alert("댓글 내용을 입력해주세요.");
+			return;
+		}
+
+		if (updating) {
+			return;
+		}
 
 		const req = {
-			content: content
+			content: trimmedContent
 		};
 
-		await axios.patch(`/api/comment/${comment.seq}`, req, {headers: headers})
-		.then((resp) => {
-			
-			console.log("[Comment.js] updateComment() success :D");
+		try {
+			setUpdating(true);
+
+			const resp = await axios.patch(
+				`/api/comment/${comment.seq}`,
+				req,
+				{
+					headers
+				}
+			);
+
+			console.log(
+				"[Comment.js] updateComment() success"
+			);
 			console.log(resp.data);
 
-			alert("댓글을 성공적으로 수정했습니다 !");
-			navigate(0);
+			setSavedContent(trimmedContent);
+			setContent(trimmedContent);
+			setIsEditing(false);
 
-		}).catch((err) => {
+			alert("댓글을 성공적으로 수정했습니다.");
+		} catch (err) {
+			console.error(
+				"[Comment.js] updateComment() error"
+			);
+			console.error(err);
 
-			console.log("[Comment.js] updateComment() error :<");
-			console.log(err);
+			const errorMessage =
+				err.response?.data?.message ||
+				err.response?.data ||
+				"댓글 수정 중 오류가 발생했습니다.";
 
-			alert(err.response.data);
-
-		});
-
-
-		updateToggle();
-	}
+			alert(
+				typeof errorMessage === "string"
+					? errorMessage
+					: "댓글 수정 중 오류가 발생했습니다."
+			);
+		} finally {
+			setUpdating(false);
+		}
+	};
 
 	/* 댓글 삭제 */
 	const deleteComment = async () => {
-		await axios.delete(`/api/comment/${comment.seq}`)
-			.then((resp) => {
-				console.log("[BbsComment.js] deleteComment() success :D");
-				console.log(resp.data);
+		if (deleting) {
+			return;
+		}
 
-				if (resp.data.deletedRecordCount == 1) {
-					alert("답글을 성공적으로 삭제했습니다 :D");
-					navigate(0);
-				}
-			}).catch((err) => {
-				console.log("[BbsComment.js] deleteComment() error :<");
-				console.log(err);
-			});
-	}
+		const confirmed = window.confirm(
+			"이 댓글을 삭제하시겠습니까?"
+		);
 
-	function updateToggle() { 
-		setShow(show => !show) 
-	}
+		if (!confirmed) {
+			return;
+		}
 
-	// 삭제되지 않은 댓글의 경우
-	if (comment.del == 0) {
-		return (
-			<>
-				{/* 상단 영역 (프로필 이미지, 댓글 작성자, 댓글 작성시간) */}
-				<div className="my-1 d-flex justify-content-center">
-					<div className="col-1">
-						<img src="/images/profile-placeholder.png" alt="프로필 이미지"
-							className="profile-img" />
-					</div>
-					<div className="col-5">
-						<div className="row">
-							<span className="comment-id">{comment.id}</span>
-						</div>
-						<div className="row">
-							<span>{comment.createdAt}</span>
-						</div>
-					</div>
+		try {
+			setDeleting(true);
 
-					<div className="col-4 d-flex justify-content-end">
-					{
-						/* 자신이 작성한 댓글인 경우에만 수정 삭제 가능 */
-						(localStorage.getItem("id") == comment.id) ?
-							<>
-								<button className="btn btn-outline-secondary" onClick={updateToggle}><i className="fas fa-edit"></i> 수정</button> &nbsp; 
-								<button className="btn btn-outline-danger" onClick={deleteComment}><i className="fas fa-trash-alt"></i> 삭제</button>
-							
-							</>
-							:
-							null
-					}
-					</div>
-				</div>
-
+			const resp = await axios.delete(
+				`/api/comment/${comment.seq}`,
 				{
-					/* 댓글 수정하는 경우 */
-					show ?
-						<>
-							{/* 하단 영역 (댓글 내용 + 댓글 내용 편집 창) */}
-							<div className="my-3 d-flex justify-content-center">
-								<textarea className="col-10" rows="5" value={content} onChange={changeContent}></textarea>
-							</div>
-							<div className="my-1 d-flex justify-content-center">
-								<button className="btn btn-dark" onClick={updateComment}><i className="fas fa-edit"></i>  수정 완료</button>
-							</div>
-						</>
-					:
-						<>
-							{/* 하단 영역 (댓글 내용) */}
-							<div className="my-3 d-flex justify-content-center">
-								<div className="col-10 comment">{content}</div>
-							</div>
-						</>
+					headers
 				}
+			);
 
+			console.log(
+				"[Comment.js] deleteComment() success"
+			);
+			console.log(resp.data);
 
-			</>
-		);
-	}
+			if (
+				Number(resp.data.deletedRecordCount) === 1
+			) {
+				setIsDeleted(true);
+				setIsEditing(false);
 
-	// 삭제된 댓글의 경우
-	else {
+				alert("댓글을 성공적으로 삭제했습니다.");
+				return;
+			}
+
+			alert("댓글을 삭제하지 못했습니다.");
+		} catch (err) {
+			console.error(
+				"[Comment.js] deleteComment() error"
+			);
+			console.error(err);
+
+			const errorMessage =
+				err.response?.data?.message ||
+				err.response?.data ||
+				"댓글 삭제 중 오류가 발생했습니다.";
+
+			alert(
+				typeof errorMessage === "string"
+					? errorMessage
+					: "댓글 삭제 중 오류가 발생했습니다."
+			);
+		} finally {
+			setDeleting(false);
+		}
+	};
+
+	if (isDeleted) {
 		return (
-			<>
-				<div className="my-5 d-flex justify-content-center">
-					<div className="comment">
-						<span className="del-span">⚠️ 작성자에 의해 삭제된 댓글입니다.</span>
-					</div>
+			<article className="comment-item comment-deleted-item">
+				<div className="comment-deleted-icon">
+					<i className="fas fa-comment-slash" />
 				</div>
-			</>
+
+				<span>
+                    작성자에 의해 삭제된 댓글입니다.
+                </span>
+			</article>
 		);
 	}
+
+	return (
+		<article className="comment-item">
+			<div className="comment-profile">
+				<div className="comment-profile-avatar">
+					{comment.id
+						?.charAt(0)
+						.toUpperCase() || "U"}
+				</div>
+			</div>
+
+			<div className="comment-main">
+				<div className="comment-header">
+					<div className="comment-writer-info">
+						<div className="comment-writer-name">
+							<strong>{comment.id}</strong>
+
+							{isWriter && (
+								<span className="comment-writer-badge">
+                                    내 댓글
+                                </span>
+							)}
+						</div>
+
+						<span className="comment-created-at">
+                            <i className="far fa-clock" />
+							{formatDate(comment.createdAt)}
+                        </span>
+					</div>
+
+					{isWriter && !isEditing && (
+						<div className="comment-actions">
+							<button
+								type="button"
+								className="comment-action-button comment-edit-button"
+								onClick={openUpdate}
+								disabled={deleting}
+							>
+								<i className="fas fa-edit" />
+								수정
+							</button>
+
+							<button
+								type="button"
+								className="comment-action-button comment-delete-button"
+								onClick={deleteComment}
+								disabled={deleting}
+							>
+								{deleting ? (
+									<>
+										<span className="comment-button-spinner" />
+										삭제 중
+									</>
+								) : (
+									<>
+										<i className="fas fa-trash-alt" />
+										삭제
+									</>
+								)}
+							</button>
+						</div>
+					)}
+				</div>
+
+				{isEditing ? (
+					<div className="comment-update-area">
+						<div className="comment-update-textarea-wrapper">
+                            <textarea
+								value={content}
+	                            onChange={changeContent}
+	                            rows={5}
+	                            maxLength={1000}
+	                            placeholder="댓글 내용을 입력해주세요."
+	                            autoFocus
+							/>
+
+							<span className="comment-character-count">
+                                {content.length} / 1000
+                            </span>
+						</div>
+
+						<div className="comment-update-actions">
+							<button
+								type="button"
+								className="comment-cancel-button"
+								onClick={cancelUpdate}
+								disabled={updating}
+							>
+								취소
+							</button>
+
+							<button
+								type="button"
+								className="comment-save-button"
+								onClick={updateComment}
+								disabled={updating}
+							>
+								{updating ? (
+									<>
+										<span className="comment-save-spinner" />
+										수정 중
+									</>
+								) : (
+									<>
+										<i className="fas fa-check" />
+										수정 완료
+									</>
+								)}
+							</button>
+						</div>
+					</div>
+				) : (
+					<div className="comment-content">
+						{savedContent}
+					</div>
+				)}
+			</div>
+		</article>
+	);
 }
 
 export default Comment;

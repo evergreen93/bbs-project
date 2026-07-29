@@ -1,5 +1,6 @@
 package me.hellonayeon.backend.vacation.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 import me.hellonayeon.backend.vacation.domain.Vacation;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,5 +25,11 @@ public interface VacationDao {
     Integer rejectVacation(Integer vacationId);
 
     Vacation findByVacationId(Integer vacationId);
+
+    Integer countOverlappingVacation(
+            @Param("memberId") String memberId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
 
 }

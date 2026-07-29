@@ -13,6 +13,7 @@ public class Attendance {
     private String status;
     private LocalDateTime createdAt;
 
+
     public Attendance() {
     }
 
@@ -71,4 +72,15 @@ public class Attendance {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    private String memberName;
+
+    public String getMemberName() {
+        return memberName;
+    }
+
+    public void setMemberName(String memberName) {
+        this.memberName = memberName;
+    }
+
 }

@@ -67,14 +67,13 @@ function Vacation() {
             await getVacationList();
 
         } catch (error) {
+            console.error("휴가 신청 실패:", error);
 
-            console.error(error);
+            const errorMessage =
+                error.response?.data?.message ||
+                "휴가 신청에 실패했습니다.";
 
-            alert(
-                error.response?.data?.message ??
-                error.response?.data ??
-                "휴가 신청에 실패했습니다."
-            );
+            alert(errorMessage);
 
         }
 

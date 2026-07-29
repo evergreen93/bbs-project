@@ -46,6 +46,20 @@ public class VacationService {
             );
         }
 
+        Integer overlappingCount =
+                dao.countOverlappingVacation(
+                        memberId,
+                        vacation.getStartDate(),
+                        vacation.getEndDate()
+                );
+
+        if (overlappingCount != null && overlappingCount > 0) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "해당 기간에 이미 신청한 휴가가 있습니다."
+            );
+        }
+
         double requestedDays = calculateVacationDays(vacation);
         double usedDays = calculateUsedVacationDays(memberId);
         double totalDays = 15.0;

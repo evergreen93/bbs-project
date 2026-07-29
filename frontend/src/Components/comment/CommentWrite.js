@@ -4,68 +4,170 @@ import { useNavigate } from "react-router-dom";
 
 import { HttpHeadersContext } from "../context/HttpHeadersProvider";
 
-function CommentWrite(props) {
+import "../../css/comment.css";
 
-	const { headers, setHeaders } = useContext(HttpHeadersContext);
-
-	const id = localStorage.getItem("id");
-	const seq = props.seq;
+function CommentWrite({ seq, onCommentCreated }) {
+	const { headers } = useContext(HttpHeadersContext);
 
 	const navigate = useNavigate();
 
+	const id = localStorage.getItem("id") || "";
+
 	const [content, setContent] = useState("");
+	const [submitting, setSubmitting] = useState(false);
 
-	const chageContent = (event) => {
+	const changeContent = (event) => {
 		setContent(event.target.value);
-	}
+	};
 
-	const createComment = async() => {
+	const createComment = async () => {
+		const trimmedContent = content.trim();
 
-		const req = {
-			id: id,
-			content: content,
-			bbsSeq: seq
+		if (!trimmedContent) {
+			alert("댓글 내용을 입력해주세요.");
+			return;
 		}
 
-		await axios.post(`/api/comment`, req, { params: {"bbsSeq": seq}, headers: headers})
-		.then((resp) => {
-			console.log("[CommentWrite.js] createComment() success :D");
+		if (submitting) {
+			return;
+		}
+
+		const req = {
+			id,
+			content: trimmedContent,
+			bbsSeq: seq
+		};
+
+		try {
+			setSubmitting(true);
+
+			const resp = await axios.post(
+				"/api/comment",
+				req,
+				{
+					params: {
+						bbsSeq: seq
+					},
+					headers
+				}
+			);
+
+			console.log(
+				"[CommentWrite.js] createComment() success"
+			);
 			console.log(resp.data);
 
-			if (resp.data.seq != null) {
-				alert("댓글을 성공적으로 등록했습니다 :D");
-				navigate(0);
+			if (resp.data?.seq != null) {
+				setContent("");
+
+				alert("댓글을 성공적으로 등록했습니다.");
+
+				if (typeof onCommentCreated === "function") {
+					onCommentCreated();
+				} else {
+					navigate(0);
+				}
+
+				return;
 			}
 
-		}).catch((err) => {
-			console.log("[CommentWrite.js] createComment() error :<");
-			console.log(err);
+			alert("댓글을 등록하지 못했습니다.");
+		} catch (err) {
+			console.error(
+				"[CommentWrite.js] createComment() error"
+			);
+			console.error(err);
 
-		});
-	}
+			const errorMessage =
+				err.response?.data?.message ||
+				err.response?.data ||
+				"댓글 등록 중 오류가 발생했습니다.";
+
+			alert(
+				typeof errorMessage === "string"
+					? errorMessage
+					: "댓글 등록 중 오류가 발생했습니다."
+			);
+		} finally {
+			setSubmitting(false);
+		}
+	};
+
+	const handleKeyDown = (event) => {
+		if (
+			event.key === "Enter" &&
+			(event.ctrlKey || event.metaKey)
+		) {
+			event.preventDefault();
+			createComment();
+		}
+	};
 
 	return (
-		<>
-				{/* 상단 영역 (프로필 이미지, 댓글 작성자) */}
-				<div className="my-1 d-flex justify-content-center">
-					<div className="col-1">
-						<img src="/images/profile-placeholder.png" alt="프로필 이미지"
-							className="profile-img"/>
+		<section className="comment-write-container">
+			<div className="comment-write-header">
+				<div className="comment-write-user">
+					<div className="comment-write-avatar">
+						{id.charAt(0).toUpperCase() || "U"}
 					</div>
 
-					<div className="col-7">
-						<span className="comment-id" >{id}</span>
-					</div>
-					<div className="col-2 my-1 d-flex justify-content-end">
-						<button className="btn btn-outline-secondary" onClick={createComment}><i className="fas fa-comment-dots"></i> 댓글 추가</button>
+					<div>
+						<strong>{id}</strong>
+
+						<span>댓글 작성</span>
 					</div>
 				</div>
-				{/* 하단 영역 (댓글 내용) */}
-				<div className="my-3 d-flex justify-content-center">
-					<textarea className="col-10" rows="5" value={content} onChange={chageContent}></textarea>
-				</div><br/><br/>
-		</>
-	)
+
+				<span className="comment-write-guide">
+                    Ctrl + Enter로 등록
+                </span>
+			</div>
+
+			<div className="comment-write-input-wrapper">
+                <textarea
+					value={content}
+	                onChange={changeContent}
+	                onKeyDown={handleKeyDown}
+	                rows={5}
+	                maxLength={1000}
+	                placeholder="게시글에 대한 의견을 남겨주세요."
+	                disabled={submitting}
+				/>
+
+				<span className="comment-write-character-count">
+                    {content.length} / 1000
+                </span>
+			</div>
+
+			<div className="comment-write-footer">
+				<p>
+					<i className="fas fa-info-circle" />
+					상대방을 배려하는 댓글을 작성해주세요.
+				</p>
+
+				<button
+					type="button"
+					className="comment-write-submit-button"
+					onClick={createComment}
+					disabled={
+						submitting || !content.trim()
+					}
+				>
+					{submitting ? (
+						<>
+							<span className="comment-write-spinner" />
+							등록 중
+						</>
+					) : (
+						<>
+							<i className="far fa-comment-dots" />
+							댓글 등록
+						</>
+					)}
+				</button>
+			</div>
+		</section>
+	);
 }
 
 export default CommentWrite;

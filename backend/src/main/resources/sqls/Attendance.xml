@@ -212,4 +212,194 @@
 
     </select>
 
+    <select id="getAttendanceList"
+            parameterType="java.time.LocalDate"
+            resultType="me.hellonayeon.backend.attendance.domain.Attendance">
+
+        SELECT
+        a.attendance_id AS attendanceId,
+        m.id AS memberId,
+        m.name AS memberName,
+        #{date} AS workDate,
+        a.start_time AS startTime,
+        a.end_time AS endTime,
+
+        CASE
+        WHEN vacation_member.member_id IS NOT NULL THEN 'VACATION'
+        WHEN a.start_time IS NULL THEN 'ABSENT'
+        WHEN a.end_time IS NULL THEN 'WORKING'
+        ELSE 'FINISHED'
+        END AS status
+
+        FROM member m
+
+        LEFT JOIN attendance a
+        ON a.member_id = m.id
+        AND a.work_date = #{date}
+
+        LEFT JOIN (
+        SELECT DISTINCT member_id
+        FROM vacation
+        WHERE status = '승인'
+        AND #{date} BETWEEN start_date AND end_date
+        ) vacation_member
+        ON vacation_member.member_id = m.id
+
+        WHERE m.enabled = 'Y'
+
+        ORDER BY
+        CASE
+        WHEN vacation_member.member_id IS NOT NULL THEN 4
+        WHEN a.start_time IS NULL THEN 3
+        WHEN a.end_time IS NULL THEN 1
+        ELSE 2
+        END,
+        m.name ASC
+
+    </select>
+
+    <select id="getAttendanceSummary"
+            parameterType="java.time.LocalDate"
+            resultType="me.hellonayeon.backend.attendance.dto.AttendanceSummary">
+
+        SELECT
+        COALESCE(
+        SUM(
+        CASE
+        WHEN vacation_member.member_id IS NULL
+        AND selected_attendance.start_time IS NOT NULL
+        AND selected_attendance.end_time IS NULL
+        THEN 1
+        ELSE 0
+        END
+        ),
+        0
+        ) AS working_count,
+
+        COALESCE(
+        SUM(
+        CASE
+        WHEN vacation_member.member_id IS NULL
+        AND selected_attendance.end_time IS NOT NULL
+        THEN 1
+        ELSE 0
+        END
+        ),
+        0
+        ) AS finished_count,
+
+        COALESCE(
+        SUM(
+        CASE
+        WHEN vacation_member.member_id IS NULL
+        AND selected_attendance.member_id IS NULL
+        THEN 1
+        ELSE 0
+        END
+        ),
+        0
+        ) AS absent_count,
+
+        COALESCE(
+        SUM(
+        CASE
+        WHEN vacation_member.member_id IS NOT NULL
+        THEN 1
+        ELSE 0
+        END
+        ),
+        0
+        ) AS vacation_count
+
+        FROM member m
+
+        LEFT JOIN (
+        SELECT
+        member_id,
+        MAX(start_time) AS start_time,
+        MAX(end_time) AS end_time
+        FROM attendance
+        WHERE work_date = #{date}
+        GROUP BY member_id
+        ) selected_attendance
+        ON selected_attendance.member_id = m.id
+
+        LEFT JOIN (
+        SELECT DISTINCT member_id
+        FROM vacation
+        WHERE status = '승인'
+        AND #{date} BETWEEN start_date AND end_date
+        ) vacation_member
+        ON vacation_member.member_id = m.id
+
+        WHERE m.enabled = 'Y'
+
+    </select>
+
+    <select id="findByMemberIdAndWorkDate"
+            resultMap="attendanceMap">
+
+        SELECT
+        attendance_id,
+        member_id,
+        work_date,
+        start_time,
+        end_time,
+        status,
+        created_at
+        FROM attendance
+        WHERE member_id = #{memberId}
+        AND work_date = #{workDate}
+        LIMIT 1
+
+    </select>
+
+
+    <insert id="insertAttendance"
+            parameterType="me.hellonayeon.backend.attendance.domain.Attendance"
+            useGeneratedKeys="true"
+            keyProperty="attendanceId">
+
+        INSERT INTO attendance (
+        member_id,
+        work_date,
+        start_time,
+        end_time,
+        status
+        )
+        VALUES (
+        #{memberId},
+        #{workDate},
+        #{startTime},
+        #{endTime},
+        CASE
+        WHEN #{status} = 'ABSENT' THEN '결근'
+        WHEN #{status} = 'WORKING' THEN '근무중'
+        WHEN #{status} = 'FINISHED' THEN '퇴근'
+        ELSE #{status}
+        END
+        )
+
+    </insert>
+
+
+    <update id="updateAttendance"
+            parameterType="me.hellonayeon.backend.attendance.domain.Attendance">
+
+        UPDATE attendance
+        SET
+        start_time = #{startTime},
+        end_time = #{endTime},
+        status =
+        CASE
+        WHEN #{status} = 'ABSENT' THEN '결근'
+        WHEN #{status} = 'WORKING' THEN '근무중'
+        WHEN #{status} = 'FINISHED' THEN '퇴근'
+        ELSE #{status}
+        END
+        WHERE member_id = #{memberId}
+        AND work_date = #{workDate}
+
+    </update>
+
 </mapper>

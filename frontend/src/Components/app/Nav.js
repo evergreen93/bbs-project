@@ -2,6 +2,8 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
 
+import "../../css/nav.css";
+
 function Nav() {
 	const { auth } = useContext(AuthContext);
 	const navigate = useNavigate();
@@ -20,15 +22,22 @@ function Nav() {
 	};
 
 	return (
-		<nav className="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
-			<div className="container">
+		<nav className="office-nav navbar navbar-expand-md sticky-top">
+			<div className="container office-nav-container">
 
-				<Link className="navbar-brand font-weight-bold" to="/">
-					<i className="fas fa-building"></i> OfficeFlow
+				<Link className="office-nav-brand navbar-brand" to="/">
+					<span className="office-nav-logo">
+						<i className="fas fa-building"></i>
+					</span>
+
+					<span className="office-nav-brand-text">
+						<strong>OfficeFlow</strong>
+						<small>SMART WORKSPACE</small>
+					</span>
 				</Link>
 
 				<button
-					className="navbar-toggler"
+					className="navbar-toggler office-nav-toggler"
 					type="button"
 					data-toggle="collapse"
 					data-target="#navbar-content"
@@ -36,129 +45,149 @@ function Nav() {
 					aria-expanded="false"
 					aria-label="메뉴 열기"
 				>
-					<span className="navbar-toggler-icon"></span>
+					<span className="office-nav-toggler-line"></span>
+					<span className="office-nav-toggler-line"></span>
+					<span className="office-nav-toggler-line"></span>
 				</button>
 
 				<div
-					className="navbar-collapse collapse justify-content-between"
+					className="navbar-collapse collapse office-nav-content"
 					id="navbar-content"
 				>
-					<ul className="navbar-nav mr-auto">
+					<ul className="navbar-nav office-nav-menu">
 
-						<li className="nav-item">
-							<Link className="nav-link" to="/">
-								<i className="fas fa-home"></i> 홈
+						<li className="nav-item office-nav-item">
+							<Link
+								className="nav-link office-nav-link"
+								to="/"
+							>
+								<span className="office-nav-link-icon">
+									<i className="fas fa-home"></i>
+								</span>
+								<span>홈</span>
 							</Link>
 						</li>
 
-						<li className="nav-item">
+						<li className="nav-item office-nav-item">
 							<button
 								type="button"
-								className="nav-link btn btn-link"
+								className="nav-link office-nav-link office-nav-button"
 								onClick={() =>
 									moveProtectedPage("/dashboard")
 								}
-								style={{
-									border: "none",
-									background: "none"
-								}}
 							>
-								<i className="fas fa-chart-line"></i>{" "}
-								대시보드
+								<span className="office-nav-link-icon">
+									<i className="fas fa-chart-line"></i>
+								</span>
+								<span>대시보드</span>
 							</button>
 						</li>
 
-						<li className="nav-item">
-							<Link className="nav-link" to="/bbslist">
-								<i className="fas fa-clipboard-list"></i>{" "}
-								게시판
+						<li className="nav-item office-nav-item">
+							<Link
+								className="nav-link office-nav-link"
+								to="/bbslist"
+							>
+								<span className="office-nav-link-icon">
+									<i className="fas fa-clipboard-list"></i>
+								</span>
+								<span>게시판</span>
 							</Link>
 						</li>
 
-						<li className="nav-item">
+						<li className="nav-item office-nav-item">
 							<button
 								type="button"
-								className="nav-link btn btn-link"
+								className="nav-link office-nav-link office-nav-button"
 								onClick={() =>
 									moveProtectedPage("/attendance")
 								}
-								style={{
-									border: "none",
-									background: "none"
-								}}
 							>
-								<i className="fas fa-clock"></i>{" "}
-								근태관리
+								<span className="office-nav-link-icon">
+									<i className="fas fa-clock"></i>
+								</span>
+								<span>근태관리</span>
 							</button>
 						</li>
 
-						<li className="nav-item">
+						<li className="nav-item office-nav-item">
 							<button
 								type="button"
-								className="nav-link btn btn-link"
+								className="nav-link office-nav-link office-nav-button"
 								onClick={() =>
 									moveProtectedPage("/vacation")
 								}
-								style={{
-									border: "none",
-									background: "none"
-								}}
 							>
-								<i className="fas fa-calendar-check"></i>{" "}
-								휴가관리
+								<span className="office-nav-link-icon">
+									<i className="fas fa-calendar-check"></i>
+								</span>
+								<span>휴가관리</span>
 							</button>
 						</li>
 
 						{auth && isAdmin && (
-							<li className="nav-item">
-								<Link className="nav-link" to="/admin">
-									<i className="fas fa-user-shield"></i>{" "}
-									관리자
+							<li className="nav-item office-nav-item">
+								<Link
+									className="nav-link office-nav-link office-nav-admin-link"
+									to="/admin"
+								>
+									<span className="office-nav-link-icon">
+										<i className="fas fa-user-shield"></i>
+									</span>
+									<span>관리자</span>
 								</Link>
 							</li>
 						)}
 
 					</ul>
 
-					<ul className="navbar-nav ml-auto">
+					<ul className="navbar-nav office-nav-account">
 						{auth ? (
 							<>
-								<li className="nav-item">
-									<span className="nav-link">
-										<i className="fas fa-user"></i>{" "}
-										{auth} 님
+								<li className="nav-item office-nav-user-item">
+									<span className="office-nav-user">
+										<span className="office-nav-user-avatar">
+											{auth
+												? auth.charAt(0).toUpperCase()
+												: "U"}
+										</span>
+
+										<span className="office-nav-user-info">
+											<small>로그인 사용자</small>
+											<strong>{auth} 님</strong>
+										</span>
 									</span>
 								</li>
 
-								<li className="nav-item">
+								<li className="nav-item office-nav-account-item">
 									<Link
-										className="nav-link"
+										className="nav-link office-nav-logout"
 										to="/logout"
 									>
-										<i className="fas fa-sign-out-alt"></i>{" "}
-										로그아웃
+										<i className="fas fa-sign-out-alt"></i>
+										<span>로그아웃</span>
 									</Link>
 								</li>
 							</>
 						) : (
 							<>
-								<li className="nav-item">
+								<li className="nav-item office-nav-account-item">
 									<Link
-										className="nav-link"
+										className="nav-link office-nav-login"
 										to="/login"
 									>
-										<i className="fas fa-sign-in-alt"></i>{" "}
-										로그인
+										<i className="fas fa-sign-in-alt"></i>
+										<span>로그인</span>
 									</Link>
 								</li>
 
-								<li className="nav-item">
+								<li className="nav-item office-nav-account-item">
 									<Link
-										className="nav-link"
+										className="nav-link office-nav-join"
 										to="/join"
 									>
-										<i className="fas fa-user-plus"></i>{" "}
-										회원가입
+										<i className="fas fa-user-plus"></i>
+										<span>회원가입</span>
 									</Link>
 								</li>
 							</>

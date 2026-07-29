@@ -1,88 +1,284 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import {
+	useContext,
+	useEffect,
+	useState
+} from "react";
 import { useNavigate } from "react-router-dom";
+
 import { AuthContext } from "../context/AuthProvider";
 import { HttpHeadersContext } from "../context/HttpHeadersProvider";
 
-function BbsWrite() {
+import "../../css/bbsform.css";
 
-	const { auth, setAuth } = useContext(AuthContext)
-	const { headers, setHeaders } = useContext(HttpHeadersContext);
+function BbsWrite() {
+	const { auth } = useContext(AuthContext);
+	const { headers } = useContext(HttpHeadersContext);
 
 	const navigate = useNavigate();
 
 	const [title, setTitle] = useState("");
 	const [content, setContent] = useState("");
+	const [submitting, setSubmitting] = useState(false);
 
-	const changeTitle = (event) => {
-		setTitle(event.target.value);
-	}
-
-	const changeContent = (event) => {
-		setContent(event.target.value);
-	}
-
-	/* [POST /bbs]: 게시글 작성 */
-	const createBbs = async() => {
-
-		const req = {
-			id: localStorage.getItem("id"), 
-			title: title, 
-			content: content
-		}
-
-		await axios.post("/api/bbs", req, {headers: headers})
-		.then((resp) => {
-			console.log("[BbsWrite.js] createBbs() success :D");
-			console.log(resp.data);
-
-			alert("새로운 게시글을 성공적으로 등록했습니다 :D");
-			navigate(`/bbsdetail/${resp.data.seq}`); // 새롭게 등록한 글 상세로 이동
-		})
-		.catch((err) => {
-			console.log("[BbsWrite.js] createBbs() error :<");
-			console.log(err);
-		});
-	}
+	const writerId =
+		localStorage.getItem("id") || auth || "";
 
 	useEffect(() => {
 		if (!auth) {
-			alert("로그인 한 사용자만 게시글을 작성할 수 있습니다 !");
-			navigate(-1);
-		}
-	}, []);
+			alert(
+				"로그인한 사용자만 게시글을 작성할 수 있습니다."
+			);
 
+			navigate("/login");
+		}
+	}, [auth, navigate]);
+
+	const changeTitle = (event) => {
+		setTitle(event.target.value);
+	};
+
+	const changeContent = (event) => {
+		setContent(event.target.value);
+	};
+
+	/* 게시글 작성 */
+	const createBbs = async () => {
+		const trimmedTitle = title.trim();
+		const trimmedContent = content.trim();
+
+		if (!trimmedTitle) {
+			alert("게시글 제목을 입력해주세요.");
+			return;
+		}
+
+		if (!trimmedContent) {
+			alert("게시글 내용을 입력해주세요.");
+			return;
+		}
+
+		if (submitting) {
+			return;
+		}
+
+		const req = {
+			id: writerId,
+			title: trimmedTitle,
+			content: trimmedContent
+		};
+
+		try {
+			setSubmitting(true);
+
+			const resp = await axios.post(
+				"/api/bbs",
+				req,
+				{
+					headers
+				}
+			);
+
+			console.log(
+				"[BbsWrite.js] createBbs() success"
+			);
+			console.log(resp.data);
+
+			if (resp.data?.seq != null) {
+				alert(
+					"새로운 게시글을 성공적으로 등록했습니다."
+				);
+
+				navigate(`/bbsdetail/${resp.data.seq}`);
+				return;
+			}
+
+			alert("게시글을 등록하지 못했습니다.");
+		} catch (err) {
+			console.error(
+				"[BbsWrite.js] createBbs() error"
+			);
+			console.error(err);
+
+			const errorMessage =
+				err.response?.data?.message ||
+				err.response?.data ||
+				"게시글 등록 중 오류가 발생했습니다.";
+
+			alert(
+				typeof errorMessage === "string"
+					? errorMessage
+					: "게시글 등록 중 오류가 발생했습니다."
+			);
+		} finally {
+			setSubmitting(false);
+		}
+	};
+
+	const cancelWrite = () => {
+		if (
+			title.trim() ||
+			content.trim()
+		) {
+			const confirmed = window.confirm(
+				"작성 중인 내용이 있습니다. 작성을 취소하시겠습니까?"
+			);
+
+			if (!confirmed) {
+				return;
+			}
+		}
+
+		navigate("/bbslist");
+	};
 
 	return (
-		<div>
-			<table className="table">
-				<tbody>
-					<tr>
-						<th className="table-primary">작성자</th>
-						<td>
-							<input type="text" className="form-control"  value={localStorage.getItem("id")} size="50px" readOnly />
-						</td>
-					</tr>
+		<div className="bbs-form-page">
+			<section className="bbs-form-header">
+				<div>
+					<p className="bbs-form-eyebrow">
+						OFFICEFLOW BOARD
+					</p>
 
-					<tr>
-						<th className="table-primary">제목</th>
-						<td>
-							<input type="text" className="form-control" value={title} onChange={changeTitle} size="50px" />
-						</td>
-					</tr>
+					<h1>새 글 작성</h1>
 
-					<tr>
-						<th className="table-primary">내용</th>
-						<td>
-							<textarea className="form-control" value={content} onChange={changeContent} rows="10"></textarea>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+					<p className="bbs-form-description">
+						사내 구성원들과 공유할 소식이나
+						의견을 작성해주세요.
+					</p>
+				</div>
 
-			<div className="my-5 d-flex justify-content-center">
-				<button className="btn btn-outline-secondary" onClick={createBbs}><i className="fas fa-pen"></i> 등록하기</button>
-			</div>
+				<button
+					type="button"
+					className="bbs-form-list-button"
+					onClick={() => navigate("/bbslist")}
+				>
+					<i className="fas fa-list" />
+					게시글 목록
+				</button>
+			</section>
+
+			<section className="bbs-form-card">
+				<div className="bbs-form-card-header">
+					<div className="bbs-form-card-title">
+						<div className="bbs-form-card-icon">
+							<i className="fas fa-pen" />
+						</div>
+
+						<div>
+							<h2>게시글 내용</h2>
+
+							<p>
+								제목과 내용을 입력한 후
+								등록 버튼을 눌러주세요.
+							</p>
+						</div>
+					</div>
+
+					<span className="bbs-form-required-guide">
+                        <i className="fas fa-circle" />
+                        필수 입력
+                    </span>
+				</div>
+
+				<div className="bbs-form-body">
+					<div className="bbs-form-group">
+						<label htmlFor="write-writer">
+							작성자
+						</label>
+
+						<div className="bbs-readonly-input-wrapper">
+							<i className="far fa-user" />
+
+							<input
+								id="write-writer"
+								type="text"
+								value={writerId}
+								readOnly
+							/>
+						</div>
+					</div>
+
+					<div className="bbs-form-group">
+						<div className="bbs-form-label-row">
+							<label htmlFor="write-title">
+								제목
+								<span className="bbs-required-mark">
+                                    *
+                                </span>
+							</label>
+
+							<span className="bbs-character-count">
+                                {title.length} / 200
+                            </span>
+						</div>
+
+						<input
+							id="write-title"
+							type="text"
+							className="bbs-form-input"
+							placeholder="게시글 제목을 입력해주세요."
+							value={title}
+							onChange={changeTitle}
+							maxLength={200}
+							autoFocus
+						/>
+					</div>
+
+					<div className="bbs-form-group">
+						<div className="bbs-form-label-row">
+							<label htmlFor="write-content">
+								내용
+								<span className="bbs-required-mark">
+                                    *
+                                </span>
+							</label>
+
+							<span className="bbs-character-count">
+                                {content.length}자
+                            </span>
+						</div>
+
+						<textarea
+							id="write-content"
+							className="bbs-form-textarea"
+							placeholder="게시글 내용을 입력해주세요."
+							value={content}
+							onChange={changeContent}
+							rows={12}
+						/>
+					</div>
+				</div>
+
+				<div className="bbs-form-actions">
+					<button
+						type="button"
+						className="bbs-form-cancel-button"
+						onClick={cancelWrite}
+						disabled={submitting}
+					>
+						취소
+					</button>
+
+					<button
+						type="button"
+						className="bbs-form-submit-button"
+						onClick={createBbs}
+						disabled={submitting}
+					>
+						{submitting ? (
+							<>
+								<span className="bbs-button-spinner" />
+								등록 중
+							</>
+						) : (
+							<>
+								<i className="fas fa-check" />
+								게시글 등록
+							</>
+						)}
+					</button>
+				</div>
+			</section>
 		</div>
 	);
 }

@@ -105,6 +105,14 @@
 
     </select>
 
+    <select id="countOverlappingVacation" resultType="int">
+        SELECT COUNT(*)
+        FROM vacation
+        WHERE member_id = #{memberId}
+        AND status IN ('대기', '승인')
+        AND start_date &lt;= #{endDate}
+        AND end_date &gt;= #{startDate}
+    </select>
 
 
 </mapper>

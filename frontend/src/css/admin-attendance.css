@@ -1,0 +1,590 @@
+/* =========================================================
+   OFFICEFLOW 관리자 근태관리
+========================================================= */
+
+.admin-attendance-page {
+    min-height: 100vh;
+    padding: 38px 34px 60px;
+    background:
+            radial-gradient(
+                    circle at top right,
+                    rgba(59, 130, 246, 0.09),
+                    transparent 28%
+            ),
+            #f4f7fb;
+    box-sizing: border-box;
+}
+
+.admin-attendance-container {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   상단 헤더
+========================================================= */
+
+.admin-attendance-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 26px;
+}
+
+.admin-attendance-subtitle {
+    margin: 0 0 8px;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+}
+
+.admin-attendance-header h1,
+.admin-attendance-title {
+    margin: 0;
+    color: #172033;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.admin-attendance-description {
+    margin: 10px 0 0;
+    color: #718096;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   상단 요약 카드
+========================================================= */
+
+.admin-attendance-summary {
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+    min-width: 440px;
+    background: #ffffff;
+    border: 1px solid #e4eaf3;
+    border-radius: 18px;
+    box-shadow: 0 12px 32px rgba(30, 64, 175, 0.07);
+}
+
+.admin-attendance-summary > div {
+    position: relative;
+    flex: 1;
+    min-width: 105px;
+    padding: 17px 20px;
+    text-align: center;
+}
+
+.admin-attendance-summary > div:not(:last-child)::after {
+    position: absolute;
+    top: 19px;
+    right: 0;
+    width: 1px;
+    height: 42px;
+    background: #e8edf5;
+    content: "";
+}
+
+.admin-attendance-summary span {
+    display: block;
+    margin-bottom: 4px;
+    color: #8490a3;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.admin-attendance-summary strong {
+    color: #1e3a8a;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.admin-attendance-summary small {
+    margin-left: 3px;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   메시지
+========================================================= */
+
+.admin-attendance-message {
+    margin-bottom: 18px;
+    padding: 14px 18px;
+    color: #1d4ed8;
+    font-size: 14px;
+    font-weight: 600;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+}
+
+
+/* =========================================================
+   메인 카드
+========================================================= */
+
+.admin-attendance-card {
+    overflow: hidden;
+    padding: 0;
+    background: #ffffff;
+    border: 1px solid #e4eaf3;
+    border-radius: 20px;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+}
+
+
+/* =========================================================
+   검색 및 필터 영역
+========================================================= */
+
+.admin-attendance-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 22px 24px;
+    background: #ffffff;
+    border-bottom: 1px solid #edf1f6;
+}
+
+.admin-attendance-search {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-attendance-search input,
+.admin-attendance-search select,
+.admin-attendance-date-input {
+    height: 42px;
+    padding: 0 14px;
+    color: #334155;
+    font-size: 14px;
+    background: #f8fafc;
+    border: 1px solid #dce3ed;
+    border-radius: 10px;
+    outline: none;
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+    box-sizing: border-box;
+}
+
+.admin-attendance-search input {
+    width: 280px;
+}
+
+.admin-attendance-search select {
+    min-width: 125px;
+    cursor: pointer;
+}
+
+.admin-attendance-search input:focus,
+.admin-attendance-search select:focus,
+.admin-attendance-date-input:focus {
+    background: #ffffff;
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.11);
+}
+
+.admin-attendance-search-reset,
+.admin-attendance-refresh,
+.admin-attendance-btn {
+    height: 42px;
+    padding: 0 17px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition:
+            transform 0.15s ease,
+            background 0.2s ease,
+            border-color 0.2s ease;
+}
+
+.admin-attendance-search-reset {
+    color: #64748b;
+    background: #ffffff;
+    border: 1px solid #dce3ed;
+}
+
+.admin-attendance-search-reset:hover {
+    color: #334155;
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.admin-attendance-refresh,
+.admin-attendance-btn {
+    color: #ffffff;
+    background: #2563eb;
+    border: 1px solid #2563eb;
+}
+
+.admin-attendance-refresh:hover,
+.admin-attendance-btn:hover {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.admin-attendance-refresh:disabled,
+.admin-attendance-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+}
+
+
+/* =========================================================
+   테이블
+========================================================= */
+
+.admin-attendance-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.admin-attendance-table {
+    width: 100%;
+    min-width: 1050px;
+    margin: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.admin-attendance-table th,
+.admin-attendance-table td {
+    border: none;
+    border-bottom: 1px solid #edf1f6;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.admin-attendance-table th {
+    height: 54px;
+    padding: 0 15px;
+    color: #627086;
+    font-size: 12px;
+    font-weight: 800;
+    background: #f8fafc;
+    letter-spacing: 0.2px;
+}
+
+.admin-attendance-table td {
+    height: 66px;
+    padding: 8px 15px;
+    color: #455268;
+    font-size: 13px;
+    background: #ffffff;
+}
+
+.admin-attendance-table tbody tr {
+    transition:
+            background 0.18s ease,
+            transform 0.18s ease;
+}
+
+.admin-attendance-table tbody tr:hover td {
+    background: #f8fbff;
+}
+
+.admin-attendance-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* 권장 열 너비 */
+
+.admin-attendance-table th:nth-child(1) {
+    width: 70px;
+}
+
+.admin-attendance-table th:nth-child(2) {
+    width: 110px;
+}
+
+.admin-attendance-table th:nth-child(3) {
+    width: 130px;
+}
+
+.admin-attendance-table th:nth-child(4) {
+    width: 130px;
+}
+
+.admin-attendance-table th:nth-child(5),
+.admin-attendance-table th:nth-child(6) {
+    width: 135px;
+}
+
+.admin-attendance-table th:last-child {
+    width: 130px;
+}
+
+
+/* =========================================================
+   직원 정보
+========================================================= */
+
+.admin-attendance-user {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 11px;
+    text-align: left;
+}
+
+.admin-attendance-avatar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 800;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+    border-radius: 50%;
+}
+
+.admin-attendance-user-info {
+    min-width: 0;
+}
+
+.admin-attendance-user-name {
+    display: block;
+    overflow: hidden;
+    color: #25324a;
+    font-size: 13px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-attendance-user-id {
+    display: block;
+    margin-top: 3px;
+    overflow: hidden;
+    color: #94a3b8;
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   근태 상태 배지
+========================================================= */
+
+.admin-attendance-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 66px;
+    height: 28px;
+    padding: 0 11px;
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 999px;
+    box-sizing: border-box;
+}
+
+.admin-attendance-status.normal,
+.admin-attendance-status.working {
+    color: #047857;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+}
+
+.admin-attendance-status.late {
+    color: #c2410c;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+}
+
+.admin-attendance-status.absent {
+    color: #dc2626;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.admin-attendance-status.leave,
+.admin-attendance-status.vacation {
+    color: #6d28d9;
+    background: #f5f3ff;
+    border: 1px solid #ddd6fe;
+}
+
+.admin-attendance-status.done {
+    color: #1d4ed8;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+}
+
+.admin-attendance-status.waiting {
+    color: #64748b;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+
+/* =========================================================
+   시간 표시
+========================================================= */
+
+.admin-attendance-time {
+    color: #334155;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.admin-attendance-time.empty {
+    color: #a8b1c0;
+    font-weight: 500;
+}
+
+.admin-attendance-work-time {
+    color: #2563eb;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   관리 버튼
+========================================================= */
+
+.admin-attendance-edit-button {
+    min-width: 68px;
+    height: 34px;
+    padding: 0 13px;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 800;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 9px;
+    cursor: pointer;
+    transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            transform 0.15s ease;
+}
+
+.admin-attendance-edit-button:hover {
+    color: #ffffff;
+    background: #2563eb;
+    border-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   로딩 및 빈 목록
+========================================================= */
+
+.admin-attendance-state {
+    display: flex;
+    min-height: 320px;
+    padding: 40px 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #7c8799;
+    text-align: center;
+}
+
+.admin-attendance-state h3 {
+    margin: 14px 0 5px;
+    color: #334155;
+    font-size: 17px;
+}
+
+.admin-attendance-state p {
+    margin: 0;
+    font-size: 13px;
+}
+
+.admin-attendance-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    color: #3b82f6;
+    font-size: 22px;
+    font-weight: 800;
+    background: #eff6ff;
+    border-radius: 16px;
+}
+
+.admin-attendance-spinner {
+    width: 34px;
+    height: 34px;
+    margin-bottom: 15px;
+    border: 3px solid #dbeafe;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: attendance-spin 0.8s linear infinite;
+}
+
+@keyframes attendance-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   모바일 반응형
+========================================================= */
+
+@media (max-width: 1000px) {
+    .admin-attendance-page {
+        padding: 26px 20px 45px;
+    }
+
+    .admin-attendance-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-attendance-summary {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .admin-attendance-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-attendance-search {
+        flex-wrap: wrap;
+    }
+
+    .admin-attendance-search input {
+        flex: 1;
+        width: auto;
+        min-width: 220px;
+    }
+
+    .admin-attendance-refresh {
+        width: 100%;
+    }
+}
+
+

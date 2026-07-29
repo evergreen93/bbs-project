@@ -1,90 +1,310 @@
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import {
+	useContext,
+	useEffect,
+	useState
+} from "react";
+import {
+	useLocation,
+	useNavigate
+} from "react-router-dom";
+
 import { AuthContext } from "../context/AuthProvider";
 import { HttpHeadersContext } from "../context/HttpHeadersProvider";
 
-function BbsUpdate() {
+import "../../css/bbsform.css";
 
-	const { headers, setHeaders } = useContext(HttpHeadersContext);
-	const { auth, setAuth } = useContext(AuthContext);
+function BbsUpdate() {
+	const { headers } = useContext(HttpHeadersContext);
+	const { auth } = useContext(AuthContext);
 
 	const navigate = useNavigate();
-
 	const location = useLocation();
-	const { bbs } = location.state;
-	
-	const [title, setTitle] = useState(bbs.title);
-	const [content, setContent] = useState(bbs.content);
+
+	const bbs = location.state?.bbs;
+
+	const [title, setTitle] = useState(
+		bbs?.title || ""
+	);
+
+	const [content, setContent] = useState(
+		bbs?.content || ""
+	);
+
+	const [submitting, setSubmitting] =
+		useState(false);
+
+	const loginId =
+		localStorage.getItem("id") || auth || "";
+
+	useEffect(() => {
+		if (!auth) {
+			alert(
+				"로그인한 사용자만 게시글을 수정할 수 있습니다."
+			);
+
+			navigate("/login");
+			return;
+		}
+
+		if (!bbs) {
+			alert("수정할 게시글 정보를 찾을 수 없습니다.");
+			navigate("/bbslist");
+			return;
+		}
+
+		if (loginId !== bbs.id) {
+			alert(
+				"자신이 작성한 게시글만 수정할 수 있습니다."
+			);
+
+			navigate(`/bbsdetail/${bbs.seq}`);
+		}
+	}, [auth, bbs, loginId, navigate]);
 
 	const changeTitle = (event) => {
 		setTitle(event.target.value);
-	}
+	};
 
 	const changeContent = (event) => {
 		setContent(event.target.value);
-	}
+	};
 
 	const updateBbs = async () => {
+		const trimmedTitle = title.trim();
+		const trimmedContent = content.trim();
 
-		const req = {
-			id: auth, 
-			title: title, 
-			content: content
+		if (!trimmedTitle) {
+			alert("게시글 제목을 입력해주세요.");
+			return;
 		}
 
-		await axios.patch(`/api/bbs/${bbs.seq}`, req, {headers: headers})
-		.then((resp) => {
-			console.log("[BbsUpdate.js] updateBbs() success :D");
+		if (!trimmedContent) {
+			alert("게시글 내용을 입력해주세요.");
+			return;
+		}
+
+		if (submitting || !bbs) {
+			return;
+		}
+
+		const req = {
+			id: loginId,
+			title: trimmedTitle,
+			content: trimmedContent
+		};
+
+		try {
+			setSubmitting(true);
+
+			const resp = await axios.patch(
+				`/api/bbs/${bbs.seq}`,
+				req,
+				{
+					headers
+				}
+			);
+
+			console.log(
+				"[BbsUpdate.js] updateBbs() success"
+			);
 			console.log(resp.data);
 
-			if (resp.data.updatedRecordCount == 1) {
-				alert("게시글을 성공적으로 수정했습니다 :D");
-				navigate(`/bbsdetail/${bbs.seq}`); // 글 상세로 이동
+			if (
+				Number(resp.data.updatedRecordCount) === 1
+			) {
+				alert(
+					"게시글을 성공적으로 수정했습니다."
+				);
+
+				navigate(`/bbsdetail/${bbs.seq}`);
+				return;
 			}
 
-		})
-		.catch((err) => {
-			console.log("[BbsUpdate.js] updateBbs() error :<");
-			console.log(err);
-		});
+			alert("게시글을 수정하지 못했습니다.");
+		} catch (err) {
+			console.error(
+				"[BbsUpdate.js] updateBbs() error"
+			);
+			console.error(err);
 
+			const errorMessage =
+				err.response?.data?.message ||
+				err.response?.data ||
+				"게시글 수정 중 오류가 발생했습니다.";
+
+			alert(
+				typeof errorMessage === "string"
+					? errorMessage
+					: "게시글 수정 중 오류가 발생했습니다."
+			);
+		} finally {
+			setSubmitting(false);
+		}
+	};
+
+	const cancelUpdate = () => {
+		if (!bbs) {
+			navigate("/bbslist");
+			return;
+		}
+
+		navigate(`/bbsdetail/${bbs.seq}`);
+	};
+
+	if (!bbs) {
+		return null;
 	}
 
-
 	return (
-		<div>
-			<table className="table">
-				<tbody>
-					<tr>
-						<th className="table-primary">작성자</th>
-						<td>
-							<input type="text" className="form-control"  value={bbs.id} size="50px" readOnly />
-						</td>
-					</tr>
+		<div className="bbs-form-page">
+			<section className="bbs-form-header">
+				<div>
+					<p className="bbs-form-eyebrow">
+						OFFICEFLOW BOARD
+					</p>
 
-					<tr>
-						<th className="table-primary">제목</th>
-						<td>
-							<input type="text" className="form-control" value={title} onChange={changeTitle} size="50px" />
-						</td>
-					</tr>
+					<h1>게시글 수정</h1>
 
-					<tr>
-						<th className="table-primary">내용</th>
-						<td>
-							<textarea className="form-control" value={content} onChange={changeContent} rows="10" ></textarea>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+					<p className="bbs-form-description">
+						작성한 게시글의 제목과 내용을
+						수정할 수 있습니다.
+					</p>
+				</div>
 
-			<div className="my-3 d-flex justify-content-center">
-				<button className="btn btn-dark" onClick={updateBbs}><i className="fas fa-pen"></i> 수정하기</button>
-			</div>
+				<button
+					type="button"
+					className="bbs-form-list-button"
+					onClick={() => navigate("/bbslist")}
+				>
+					<i className="fas fa-list" />
+					게시글 목록
+				</button>
+			</section>
+
+			<section className="bbs-form-card">
+				<div className="bbs-form-card-header">
+					<div className="bbs-form-card-title">
+						<div className="bbs-form-card-icon">
+							<i className="fas fa-edit" />
+						</div>
+
+						<div>
+							<h2>게시글 내용 수정</h2>
+
+							<p>
+								변경할 내용을 입력한 후
+								수정 버튼을 눌러주세요.
+							</p>
+						</div>
+					</div>
+
+					<span className="bbs-form-required-guide">
+                        <i className="fas fa-circle" />
+                        필수 입력
+                    </span>
+				</div>
+
+				<div className="bbs-form-body">
+					<div className="bbs-form-group">
+						<label htmlFor="update-writer">
+							작성자
+						</label>
+
+						<div className="bbs-readonly-input-wrapper">
+							<i className="far fa-user" />
+
+							<input
+								id="update-writer"
+								type="text"
+								value={bbs.id}
+								readOnly
+							/>
+						</div>
+					</div>
+
+					<div className="bbs-form-group">
+						<div className="bbs-form-label-row">
+							<label htmlFor="update-title">
+								제목
+								<span className="bbs-required-mark">
+                                    *
+                                </span>
+							</label>
+
+							<span className="bbs-character-count">
+                                {title.length} / 200
+                            </span>
+						</div>
+
+						<input
+							id="update-title"
+							type="text"
+							className="bbs-form-input"
+							placeholder="게시글 제목을 입력해주세요."
+							value={title}
+							onChange={changeTitle}
+							maxLength={200}
+						/>
+					</div>
+
+					<div className="bbs-form-group">
+						<div className="bbs-form-label-row">
+							<label htmlFor="update-content">
+								내용
+								<span className="bbs-required-mark">
+                                    *
+                                </span>
+							</label>
+
+							<span className="bbs-character-count">
+                                {content.length}자
+                            </span>
+						</div>
+
+						<textarea
+							id="update-content"
+							className="bbs-form-textarea"
+							placeholder="게시글 내용을 입력해주세요."
+							value={content}
+							onChange={changeContent}
+							rows={12}
+						/>
+					</div>
+				</div>
+
+				<div className="bbs-form-actions">
+					<button
+						type="button"
+						className="bbs-form-cancel-button"
+						onClick={cancelUpdate}
+						disabled={submitting}
+					>
+						취소
+					</button>
+
+					<button
+						type="button"
+						className="bbs-form-submit-button"
+						onClick={updateBbs}
+						disabled={submitting}
+					>
+						{submitting ? (
+							<>
+								<span className="bbs-button-spinner" />
+								수정 중
+							</>
+						) : (
+							<>
+								<i className="fas fa-check" />
+								수정 완료
+							</>
+						)}
+					</button>
+				</div>
+			</section>
 		</div>
 	);
-
 }
 
 export default BbsUpdate;

@@ -15,14 +15,15 @@ import Vacation from "../work/Vacation";
 import AdminVacationPage from "../admin/AdminVacationPage";
 import AdminMemberPage from "../admin/AdminMemberPage";
 import AdminBoardPage from "../admin/AdminBoardPage";
-
+import AdminAttendancePage from "../admin/AdminAttendancePage";
 
 
 function Router() {
 
 	return (
 			<Routes>
-				<Route path="/" element={<Home />}></Route>
+				<Route path="/admin/attendance" element={<AdminAttendancePage />}/>
+				<Route path="/" element={<Login />} />
 				<Route path="/admin/members" element={<AdminMemberPage />} />
 				<Route path="/admin/boards" element={<AdminBoardPage />} />
 				<Route path="/admin/vacations" element={<AdminVacationPage />}/>
