@@ -1,6 +1,9 @@
 package me.hellonayeon.backend.vacation.controller;
 
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import me.hellonayeon.backend.vacation.domain.Vacation;
 import me.hellonayeon.backend.vacation.service.VacationService;
@@ -47,6 +50,7 @@ public class AdminVacationController {
         service.rejectVacation(vacationId);
         return ResponseEntity.ok().build();
     }
+
 
 
 

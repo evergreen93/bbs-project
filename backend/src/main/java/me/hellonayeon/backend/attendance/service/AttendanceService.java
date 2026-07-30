@@ -1,25 +1,33 @@
 package me.hellonayeon.backend.attendance.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+
 import me.hellonayeon.backend.attendance.dao.AttendanceDao;
 import me.hellonayeon.backend.attendance.domain.Attendance;
+import me.hellonayeon.backend.attendance.dto.AttendanceSummary;
+import me.hellonayeon.backend.attendance.dto.AttendanceUpdateRequest;
 import me.hellonayeon.backend.attendance.exception.AttendanceException;
+import me.hellonayeon.backend.vacation.dao.VacationDao;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import me.hellonayeon.backend.attendance.dto.AttendanceSummary;
-import java.time.LocalDateTime;
-import me.hellonayeon.backend.attendance.dto.AttendanceUpdateRequest;
 
 @Service
 @Transactional
 public class AttendanceService {
 
     private final AttendanceDao dao;
+    private final VacationDao vacationDao;
 
-    public AttendanceService(AttendanceDao dao) {
+    public AttendanceService(
+            AttendanceDao dao,
+            VacationDao vacationDao
+    ) {
         this.dao = dao;
+        this.vacationDao = vacationDao;
     }
 
     public Attendance getTodayAttendance(String memberId) {
@@ -27,7 +35,19 @@ public class AttendanceService {
     }
 
     public Attendance startAttendance(String memberId) {
-        Attendance attendance = dao.findTodayByMemberId(memberId);
+
+        boolean isVacation =
+                vacationDao.existsApprovedVacationToday(memberId);
+
+        if (isVacation) {
+            throw new AttendanceException(
+                    "휴가 중에는 출근할 수 없습니다.",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        Attendance attendance =
+                dao.findTodayByMemberId(memberId);
 
         if (attendance != null) {
             throw new AttendanceException(
@@ -38,7 +58,7 @@ public class AttendanceService {
 
         Integer result = dao.startAttendance(memberId);
 
-        if (result == 0) {
+        if (result == null || result == 0) {
             throw new AttendanceException(
                     "출근 처리에 실패했습니다.",
                     HttpStatus.INTERNAL_SERVER_ERROR
@@ -49,7 +69,8 @@ public class AttendanceService {
     }
 
     public Attendance endAttendance(String memberId) {
-        Attendance attendance = dao.findTodayByMemberId(memberId);
+        Attendance attendance =
+                dao.findTodayByMemberId(memberId);
 
         if (attendance == null) {
             throw new AttendanceException(
@@ -67,7 +88,7 @@ public class AttendanceService {
 
         Integer result = dao.endAttendance(memberId);
 
-        if (result == 0) {
+        if (result == null || result == 0) {
             throw new AttendanceException(
                     "퇴근 처리에 실패했습니다.",
                     HttpStatus.INTERNAL_SERVER_ERROR
@@ -78,7 +99,9 @@ public class AttendanceService {
     }
 
     @Transactional(readOnly = true)
-    public List<Attendance> getAttendanceHistory(String memberId) {
+    public List<Attendance> getAttendanceHistory(
+            String memberId
+    ) {
         return dao.findHistoryByMemberId(memberId);
     }
 
@@ -95,7 +118,9 @@ public class AttendanceService {
     }
 
     @Transactional(readOnly = true)
-    public List<Attendance> getAttendanceList(LocalDate date) {
+    public List<Attendance> getAttendanceList(
+            LocalDate date
+    ) {
         return dao.getAttendanceList(date);
     }
 
@@ -103,6 +128,7 @@ public class AttendanceService {
             String memberId,
             AttendanceUpdateRequest request
     ) {
+
         if (request.getWorkDate() == null) {
             throw new AttendanceException(
                     "근태 날짜가 필요합니다.",
@@ -117,6 +143,15 @@ public class AttendanceService {
                     "근태 상태가 필요합니다.",
                     HttpStatus.BAD_REQUEST
             );
+        }
+
+        // 미출근이면 해당 날짜의 근태 기록 삭제
+        if ("ABSENT".equals(status)) {
+            dao.deleteAttendance(
+                    memberId,
+                    request.getWorkDate()
+            );
+            return;
         }
 
         LocalDateTime startDateTime = null;
@@ -137,9 +172,9 @@ public class AttendanceService {
         }
 
         if (
-                startDateTime != null &&
-                        endDateTime != null &&
-                        endDateTime.isBefore(startDateTime)
+                startDateTime != null
+                        && endDateTime != null
+                        && endDateTime.isBefore(startDateTime)
         ) {
             throw new AttendanceException(
                     "퇴근 시간은 출근 시간보다 빠를 수 없습니다.",
@@ -176,5 +211,4 @@ public class AttendanceService {
             );
         }
     }
-
 }

@@ -373,7 +373,7 @@
         #{startTime},
         #{endTime},
         CASE
-        WHEN #{status} = 'ABSENT' THEN '결근'
+        WHEN #{status} = 'ABSENT' THEN '미출근'
         WHEN #{status} = 'WORKING' THEN '근무중'
         WHEN #{status} = 'FINISHED' THEN '퇴근'
         ELSE #{status}
@@ -392,7 +392,7 @@
         end_time = #{endTime},
         status =
         CASE
-        WHEN #{status} = 'ABSENT' THEN '결근'
+        WHEN #{status} = 'ABSENT' THEN '미출근'
         WHEN #{status} = 'WORKING' THEN '근무중'
         WHEN #{status} = 'FINISHED' THEN '퇴근'
         ELSE #{status}
@@ -401,5 +401,13 @@
         AND work_date = #{workDate}
 
     </update>
+
+    <delete id="deleteAttendance">
+
+        DELETE FROM attendance
+        WHERE member_id = #{memberId}
+        AND work_date = #{workDate}
+
+    </delete>
 
 </mapper>

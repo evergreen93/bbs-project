@@ -32,4 +32,8 @@ public interface VacationDao {
             @Param("endDate") LocalDate endDate
     );
 
+    boolean existsApprovedVacationToday(
+            @Param("memberId") String memberId
+    );
+
 }

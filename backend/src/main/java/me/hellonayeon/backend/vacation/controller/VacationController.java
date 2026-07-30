@@ -1,6 +1,7 @@
 package me.hellonayeon.backend.vacation.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import me.hellonayeon.backend.vacation.domain.Vacation;
 import me.hellonayeon.backend.vacation.service.VacationService;
@@ -61,6 +62,20 @@ public class VacationController {
 
         return ResponseEntity.ok(
                 service.getRemainingVacationDays(memberId)
+        );
+    }
+
+    @GetMapping("/today")
+    public ResponseEntity<Map<String, Boolean>> getTodayVacation(
+            Authentication authentication
+    ) {
+        String memberId = authentication.getName();
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "isVacation",
+                        service.isTodayVacation(memberId)
+                )
         );
     }
 

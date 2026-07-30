@@ -7,11 +7,15 @@ import me.hellonayeon.backend.member.dao.MemberDao;
 import me.hellonayeon.backend.vacation.dao.VacationDao;
 import me.hellonayeon.backend.vacation.domain.Vacation;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.server.ResponseStatusException;
 import java.time.DayOfWeek;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -144,6 +148,11 @@ public class VacationService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public boolean isTodayVacation(String memberId) {
+        return dao.existsApprovedVacationToday(memberId);
+    }
+
     private double countWeekdays(LocalDate startDate, LocalDate endDate) {
         long days = ChronoUnit.DAYS.between(startDate, endDate) + 1;
 
@@ -263,6 +272,7 @@ public class VacationService {
             );
         }
     }
+
 
 
 }

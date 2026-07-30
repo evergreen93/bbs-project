@@ -5,6 +5,22 @@ import { HttpHeadersContext } from "../context/HttpHeadersProvider";
 
 function Attendance() {
     const { headers } = useContext(HttpHeadersContext);
+    const [isVacation, setIsVacation] = useState(false);
+    const getTodayVacation = async () => {
+        try {
+            const response = await axios.get(
+                "/api/vacations/today",
+                { headers }
+            );
+
+            setIsVacation(response.data.isVacation);
+        } catch (error) {
+            console.error(
+                "오늘 휴가 여부 조회 오류:",
+                error.response?.data || error
+            );
+        }
+    };
 
     const [attendance, setAttendance] = useState({
         workDate: new Date().toISOString().slice(0, 10),
@@ -21,6 +37,9 @@ function Attendance() {
         getTodayAttendance();
 
         getAttendanceHistory();
+
+        getTodayVacation();
+
 
         const timer = setInterval(() => {
             setCurrentTime(new Date());
@@ -68,15 +87,22 @@ function Attendance() {
                 { headers }
             );
 
+            // 위쪽 오늘 근태 즉시 변경
             setAttendance(response.data);
+
+            // 아래쪽 최근 근태 기록 다시 조회
+            await getAttendanceHistory();
+
             alert("출근 처리되었습니다.");
         } catch (error) {
-            console.error("출근 처리 오류:", error.response?.data);
+            const data = error.response?.data;
 
-            alert(
-                error.response?.data?.message ||
-                "정해진 출근 시간이 아닙니다."
-            );
+            const message =
+                typeof data === "string"
+                    ? data
+                    : data?.message;
+
+            alert(message || "정해진 출근 시간이 아닙니다.");
         }
     };
 
@@ -88,12 +114,21 @@ function Attendance() {
                 { headers }
             );
 
+            // 위쪽 오늘 근태 즉시 변경
             setAttendance(response.data);
+
+            // 아래쪽 최근 근태 기록 다시 조회
+            await getAttendanceHistory();
+
             alert("퇴근 처리되었습니다.");
         } catch (error) {
-            console.error(error);
+            console.error(
+                "퇴근 처리 오류:",
+                error.response?.data
+            );
 
             alert(
+                error.response?.data?.message ||
                 error.response?.data ||
                 "퇴근 처리 중 오류가 발생했습니다."
             );
@@ -209,7 +244,7 @@ function Attendance() {
                     <div className="attendance-main-header">
                         <div>
                             <p>오늘 근무 상태</p>
-                            <h2>{attendance.status}</h2>
+                            <h2>  {isVacation ? "휴가" : attendance.status}</h2>
                         </div>
 
                         <span className={statusClassName}>
@@ -239,7 +274,10 @@ function Attendance() {
                             type="button"
                             className="attendance-button start"
                             onClick={handleStartWork}
-                            disabled={Boolean(attendance.startTime)}
+                            disabled={
+                                isVacation ||
+                                Boolean(attendance.startTime)
+                            }
                         >
                             <i className="fas fa-sign-in-alt"></i>
                             출근하기

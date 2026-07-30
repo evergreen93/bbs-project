@@ -114,5 +114,19 @@
         AND end_date &gt;= #{startDate}
     </select>
 
+    <select id="existsApprovedVacationToday"
+            parameterType="java.lang.String"
+            resultType="java.lang.Boolean">
+
+        SELECT EXISTS (
+        SELECT 1
+        FROM vacation
+        WHERE member_id = #{memberId}
+        AND status = '승인'
+        AND DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 9 HOUR))
+        BETWEEN start_date AND end_date
+        )
+
+    </select>
 
 </mapper>

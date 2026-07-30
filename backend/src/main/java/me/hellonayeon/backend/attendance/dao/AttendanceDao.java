@@ -33,4 +33,5 @@ public interface AttendanceDao {
 
     Integer updateAttendance(Attendance attendance);
 
+    Integer deleteAttendance(String memberId, LocalDate workDate);
 }
