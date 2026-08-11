@@ -1,0 +1,83 @@
+.vacation-page {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.vacation-summary {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 24px;
+}
+
+.vacation-main-card {
+    width: 100%;
+    padding: 32px;
+    box-sizing: border-box;
+}
+
+.vacation-main-card .mb-3 {
+    margin-bottom: 20px !important;
+}
+
+.vacation-main-card label {
+    display: block;
+    margin-bottom: 8px;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.vacation-main-card .form-control {
+    width: 100%;
+    min-height: 48px;
+    padding: 11px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #1e293b;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.vacation-main-card .form-control:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.vacation-main-card textarea.form-control {
+    min-height: 140px;
+    resize: vertical;
+}
+
+.vacation-main-card .attendance-button {
+    min-width: 180px;
+    margin-top: 4px;
+}
+
+.vacation-history-card {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.vacation-history-card .table-responsive {
+    width: 100%;
+}
+
+.vacation-history-card .attendance-table {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .vacation-main-card {
+        padding: 22px 18px;
+    }
+
+    .vacation-main-card .attendance-button {
+        width: 100%;
+    }
+}

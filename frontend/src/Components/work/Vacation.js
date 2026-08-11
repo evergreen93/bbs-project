@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { HttpHeadersContext } from "../context/HttpHeadersProvider";
+import "../../css/vacation.css";
 
 function Vacation() {
 
@@ -84,7 +85,7 @@ function Vacation() {
     }, []);
 
     return (
-        <div className="attendance-page">
+        <div className="attendance-page vacation-page">
 
             <section className="attendance-heading">
                 <div>
@@ -94,9 +95,9 @@ function Vacation() {
                 </div>
             </section>
 
-            <section className="attendance-summary">
+            <section className="attendance-summary vacation-summary">
 
-                <div className="attendance-main-card">
+                <div className="attendance-main-card vacation-main-card">
 
                     <div className="mb-3">
                         <label>휴가 종류</label>
@@ -162,7 +163,7 @@ function Vacation() {
 
             </section>
 
-            <section className="attendance-history-card">
+            <section className="attendance-history-card vacation-history-card">
                 <div className="attendance-history-header">
                     <div>
                         <p className="attendance-eyebrow">HISTORY</p>
@@ -190,17 +191,17 @@ function Vacation() {
                                 <td>{item.endDate}</td>
                                 <td>{item.reason || "-"}</td>
                                 <td>
-                            <span
-                                className={
-                                    item.status === "승인"
-                                        ? "attendance-history-badge normal"
-                                        : item.status === "반려"
-                                            ? "attendance-history-badge late"
-                                            : "attendance-history-badge"
-                                }
-                            >
-                                {item.status}
-                            </span>
+                                    <span
+                                        className={
+                                            item.status === "승인"
+                                                ? "attendance-history-badge normal"
+                                                : item.status === "반려"
+                                                    ? "attendance-history-badge late"
+                                                    : "attendance-history-badge"
+                                        }
+                                    >
+                                        {item.status}
+                                    </span>
                                 </td>
                             </tr>
                         ))}
@@ -210,8 +211,6 @@ function Vacation() {
             </section>
 
         </div>
-
-
     );
 }
 

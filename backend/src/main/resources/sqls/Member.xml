@@ -18,7 +18,7 @@
 		enabled
 		FROM member
 		WHERE id = #{id}
-		AND enabled = 'Y'
+
 
 	</select>
 

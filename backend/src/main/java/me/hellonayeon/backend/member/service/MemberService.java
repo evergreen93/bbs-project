@@ -97,12 +97,39 @@ public class MemberService {
 	}
 
 	private void authenticate(String id, String pwd) {
+
+		Member member = memberDao.findById(id);
+
+		if (member == null) {
+			throw new MemberException(
+					"존재하지 않는 아이디입니다.",
+					HttpStatus.BAD_REQUEST
+			);
+		}
+
+		if ("N".equals(member.getEnabled())) {
+			throw new MemberException(
+					"탈퇴한 회원입니다.",
+					HttpStatus.BAD_REQUEST
+			);
+		}
+
 		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, pwd));
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(id, pwd)
+			);
+
 		} catch (DisabledException e) {
-			throw new MemberException("인증되지 않은 아이디입니다.", HttpStatus.BAD_REQUEST);
+			throw new MemberException(
+					"인증되지 않은 아이디입니다.",
+					HttpStatus.BAD_REQUEST
+			);
+
 		} catch (BadCredentialsException e) {
-			throw new MemberException("비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+			throw new MemberException(
+					"비밀번호가 일치하지 않습니다.",
+					HttpStatus.BAD_REQUEST
+			);
 		}
 	}
 
